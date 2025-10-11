@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Apple Invest - Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --primary:#007AFF;
+      --primary-light:#5AC8FA;
+      --secondary:#FF2D55;
+      --accent:#32D74B;
+      --bg:#F9FAFB;
+      --card:#FFFFFF;
+      --text:#1D1D1F;
+      --muted:#6B6B70;
+      --border:#E5E5EA;
+      --gold:#FFD700;
+      --purple:#BF5AF2;
+      --gradient-primary:linear-gradient(135deg, #007AFF, #5AC8FA);
+      --gradient-secondary:linear-gradient(135deg, #FF2D55, #FF6B8B);
+      --gradient-accent:linear-gradient(135deg, #32D74B, #64D2FF);
+      --gradient-gold:linear-gradient(135deg, #FFD700, #FF9500);
+      --gradient-purple:linear-gradient(135deg, #BF5AF2, #AC8EF9);
+      --shadow-sm:0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg:0 8px 24px rgba(0,0,0,0.12);
+    }
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header{
+      background:linear-gradient(180deg,#fff,#f3f4f6);
+      padding:20px 16px 30px;
+      border-bottom:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      position:relative;
+      overflow:hidden;
+    }
+    header::before {
+      content:'';
+      position:absolute;
+      top:0;
+      right:0;
+      width:200px;
+      height:200px;
+      background:var(--gradient-primary);
+      border-radius:50%;
+      filter:blur(60px);
+      opacity:0.1;
+      z-index:0;
+    }
+    .header-top{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:20px;
+      position:relative;
+      z-index:1;
+    }
+    .company-card {
+      background: var(--gradient-primary);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+      color: white;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .company-logo{
+      width:60px;height:60px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--shadow-md);
+      border:2px solid rgba(255,255,255,0.3);
+    }
+    .company-logo img{
+      width:36px;
+      height:36px;
+      filter:brightness(0) invert(1);
+    }
+    .company-text {
+      line-height: 1.3;
+      flex: 1;
+    }
+    .company-name{
+      font-weight:700;
+      font-size:20px;
+      color: white;
+      margin-bottom: 4px;
+    }
+    .company-desc{
+      font-size:14px;
+      color:rgba(255,255,255,0.9);
+      font-weight: 400;
+    }
+
+    .banner{
+      overflow:hidden;border-radius:20px;margin-top:8px;
+      position:relative;
+      box-shadow:var(--shadow-md);
+      height:180px;
+    }
+    .banner img{
+      width:100%;border-radius:20px;height:100%;object-fit:cover;
+      transition:transform 0.5s ease;
+    }
+    .banner:hover img {
+      transform:scale(1.03);
+    }
+    .banner::after {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:var(--gradient-primary);
+      opacity:0.1;
+      border-radius:20px;
+    }
+
+    main{
+      padding:20px 16px;
+      max-width:1000px;
+      margin:auto;
+      padding-bottom: 80px; /* Memberi ruang untuk navigasi bawah */
+    }
+
+    .menu{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;
+    }
+    .menu button{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      background:#fff;border:none;border-radius:16px;padding:16px 8px;
+      box-shadow:var(--shadow-sm);
+      cursor:pointer;transition:all 0.3s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .menu button::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:var(--gradient-primary);
+      opacity:0;
+      transition:opacity 0.3s ease;
+    }
+    .menu button:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow-lg);
+    }
+    .menu button:hover::before {
+      opacity:1;
+    }
+    .menu button:hover img {
+      filter:brightness(0) invert(1);
+    }
+    .menu button:hover span {
+      color:white;
+    }
+    .menu img{
+      width:28px;height:28px;margin-bottom:8px;
+      position:relative;
+      z-index:1;
+      transition:all 0.3s ease;
+    }
+    .menu span{
+      font-size:13px;font-weight:600;color:var(--text);
+      position:relative;
+      z-index:1;
+      transition:all 0.3s ease;
+    }
+
+    .saldo{
+      background:var(--gradient-primary);
+      color:#fff;border-radius:20px;padding:20px;
+      margin-bottom:24px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:var(--shadow-md);
+      position:relative;
+      overflow:hidden;
+    }
+    .saldo::before {
+      content:'';
+      position:absolute;
+      top:-50%;
+      right:-20%;
+      width:150px;
+      height:150px;
+      background:rgba(255,255,255,0.1);
+      border-radius:50%;
+    }
+    .saldo::after {
+      content:'';
+      position:absolute;
+      bottom:-60%;
+      left:-10%;
+      width:120px;
+      height:120px;
+      background:rgba(255,255,255,0.1);
+      border-radius:50%;
+    }
+    .saldo .label{font-size:14px;opacity:0.9;font-weight:500;}
+    .saldo .amount{font-size:26px;font-weight:700;margin-top:4px;}
+    .saldo img{
+      width:44px;height:44px;
+      filter:brightness(0) invert(1);
+      position:relative;
+      z-index:1;
+    }
+
+    .produk h2{
+      font-size:18px;font-weight:700;margin-bottom:16px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .produk h2::before {
+      content:'';
+      display:block;
+      width:4px;
+      height:20px;
+      background:var(--gradient-primary);
+      border-radius:2px;
+    }
+    .produk-list{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 640px) {
+      .produk-list {
+        grid-template-columns:1fr;
+      }
+    }
+    .produk-item{
+      background:var(--card);
+      border-radius:16px;
+      padding:16px;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      transition:all 0.3s ease;
+      position:relative;
+      overflow:hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .produk-item::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:4px;
+      background:var(--gradient-primary);
+    }
+    .produk-item:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow-lg);
+    }
+    .produk-item:nth-child(2)::before {
+      background:var(--gradient-secondary);
+    }
+    .produk-item:nth-child(3)::before {
+      background:var(--gradient-accent);
+    }
+    .produk-item:nth-child(4)::before {
+      background:var(--gradient-gold);
+    }
+    .produk-item:nth-child(5)::before {
+      background:var(--gradient-purple);
+    }
+    .produk-item:nth-child(6)::before {
+      background:var(--gradient-primary);
+    }
+    .produk-item:nth-child(7)::before {
+      background:var(--gradient-secondary);
+    }
+    .produk-item:nth-child(8)::before {
+      background:var(--gradient-accent);
+    }
+    .produk-item:nth-child(9)::before {
+      background:var(--gradient-gold);
+    }
+    .produk-logo {
+      width: 100%;
+      height: 120px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .produk-item:nth-child(1) .produk-logo {
+      background: linear-gradient(135deg, #007AFF, #5AC8FA);
+    }
+    .produk-item:nth-child(2) .produk-logo {
+      background: linear-gradient(135deg, #FF2D55, #FF6B8B);
+    }
+    .produk-item:nth-child(3) .produk-logo {
+      background: linear-gradient(135deg, #32D74B, #64D2FF);
+    }
+    .produk-item:nth-child(4) .produk-logo {
+      background: linear-gradient(135deg, #FFD700, #FF9500);
+    }
+    .produk-item:nth-child(5) .produk-logo {
+      background: linear-gradient(135deg, #BF5AF2, #AC8EF9);
+    }
+    .produk-item:nth-child(6) .produk-logo {
+      background: linear-gradient(135deg, #007AFF, #5AC8FA);
+    }
+    .produk-item:nth-child(7) .produk-logo {
+      background: linear-gradient(135deg, #FF2D55, #FF6B8B);
+    }
+    .produk-item:nth-child(8) .produk-logo {
+      background: linear-gradient(135deg, #32D74B, #64D2FF);
+    }
+    .produk-item:nth-child(9) .produk-logo {
+      background: linear-gradient(135deg, #FFD700, #FF9500);
+    }
+    .produk-logo img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+    .produk-item .title{
+      font-weight:700;
+      margin-bottom:6px;
+      font-size:16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .produk-item .price{
+      font-size:15px;
+      font-weight:700;
+      background:var(--gradient-primary);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      display:inline-block;
+    }
+    .produk-item:nth-child(2) .price {
+      background:var(--gradient-secondary);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(3) .price {
+      background:var(--gradient-accent);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(4) .price {
+      background:var(--gradient-gold);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(5) .price {
+      background:var(--gradient-purple);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(6) .price {
+      background:var(--gradient-primary);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(7) .price {
+      background:var(--gradient-secondary);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(8) .price {
+      background:var(--gradient-accent);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item:nth-child(9) .price {
+      background:var(--gradient-gold);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .produk-item .info{
+      font-size:13px;
+      color:var(--muted);
+      margin:4px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .produk-item .info .value {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .produk-item button{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      background:var(--gradient-primary);
+      color:#fff;
+      font-weight:600;
+      margin-top:auto;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      box-shadow:var(--shadow-sm);
+    }
+    .produk-item:nth-child(2) button {
+      background:var(--gradient-secondary);
+    }
+    .produk-item:nth-child(3) button {
+      background:var(--gradient-accent);
+    }
+    .produk-item:nth-child(4) button {
+      background:var(--gradient-gold);
+    }
+    .produk-item:nth-child(5) button {
+      background:var(--gradient-purple);
+    }
+    .produk-item:nth-child(6) button {
+      background:var(--gradient-primary);
+    }
+    .produk-item:nth-child(7) button {
+      background:var(--gradient-secondary);
+    }
+    .produk-item:nth-child(8) button {
+      background:var(--gradient-accent);
+    }
+    .produk-item:nth-child(9) button {
+      background:var(--gradient-gold);
+    }
+    .produk-item button:hover{
+      transform:translateY(-2px);
+      box-shadow:var(--shadow-md);
+    }
+    .produk-item button:disabled{
+      opacity:0.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    /* Garis pemisah */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0;
+      width: 100%;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      animation: modalAppear 0.3s ease;
+    }
+    @keyframes modalAppear {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    .modal p {
+      margin-bottom: 20px;
+      color: var(--muted);
+    }
+    .modal button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .modal button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    nav.bottom{
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:#fff;
+      border-top:1px solid var(--border);
+      display:flex;
+      justify-content:space-around;
+      align-items:center;
+      padding:12px 0;
+      box-shadow:0 -2px 10px rgba(0,0,0,0.05);
+      z-index:100;
+    }
+    nav.bottom button{
+      background:none;
+      border:none;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      transition:all 0.3s ease;
+      padding:8px 12px;
+      border-radius:12px;
+      cursor: pointer;
+    }
+    nav.bottom button.active{
+      color:var(--primary);
+      font-weight:700;
+      background:rgba(0,122,255,0.1);
+    }
+    nav.bottom img{
+      width:22px;
+      height:22px;
+      transition:transform 0.3s ease;
+    }
+    nav.bottom button.active img{
+      transform:scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div class="company-card">
+        <div class="company-logo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Invest">
+        </div>
+        <div class="company-text">
+          <div class="company-name">Apple Invest</div>
+          <div class="company-desc"></div>
+        </div>
+      </div>
+    </div>
+    <div class="banner">
+      <img src="https://i.ibb.co.com/DDD54z4p/photo-1665113721247-59fb42b87306.jpg" alt="Apple Store Banner">
+    </div>
+  </header>
+  
+  <main>
+    <div class="menu">
+      <button onclick="goPage('deposit.html')">
+        <img src="https://img.icons8.com/ios-filled/50/007aff/money-bag.png">
+        <span>Isi Ulang</span>
+      </button>
+      <button onclick="goPage('tarik.html')">
+        <img src="https://img.icons8.com/ios-filled/50/007aff/withdrawal.png">
+        <span>Tarik</span>
+      </button>
+      <button onclick="goPage('tim.html')">
+        <img src="https://img.icons8.com/ios-filled/50/007aff/conference.png">
+        <span>Tim</span>
+      </button>
+      <button onclick="goPage('online.html')">
+        <img src="https://img.icons8.com/ios-filled/50/007aff/internet.png">
+        <span>Online</span>
+      </button>
+    </div>
+    
+    <div class="saldo">
+      <div>
+        <div class="label">Saldo Total</div>
+        <div class="amount" id="saldoTotal">Rp 0</div>
+      </div>
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/wallet.png" width="40">
+    </div>
+
+    <section class="produk">
+      <h2>Produk Investasi</h2>
+      <div class="produk-list" id="produkGrid"></div>
+    </section>
+  </main>
+  
+  <!-- Modal untuk pesan -->
+  <div class="modal" id="messageModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Pembelian Berhasil</h3>
+      <p id="modalMessage">Paket berhasil dibeli.</p>
+      <button id="modalButton">Tutup</button>
+    </div>
+  </div>
+  
+  <nav class="bottom">
+    <button class="active" onclick="goPage('index.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/home.png">
+      <span>Beranda</span>
+    </button>
+    <button onclick="goPage('investasi.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/combo-chart.png">
+      <span>Investasi</span>
+    </button>
+    <button onclick="goPage('undang.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/share.png">
+      <span>Undang</span>
+    </button>
+    <button onclick="goPage('profil.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/user-male-circle.png">
+      <span>Profil</span>
+    </button>
+  </nav>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+      authDomain: "lginvest-776cf.firebaseapp.com",
+      databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+      projectId: "lginvest-776cf",
+      storageBucket: "lginvest-776cf.firebasestorage.app",
+      messagingSenderId: "831934282072",
+      appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+      measurementId: "G-265YF9DYCF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Data produk sesuai permintaan
+    const produkList = [
+      { kode: 'A', harga: 50000, perhari: 6000, masaAktif: 95 },
+      { kode: 'B', harga: 100000, perhari: 15000, masaAktif: 95 },
+      { kode: 'C', harga: 200000, perhari: 30000, masaAktif: 95 },
+      { kode: 'D', harga: 350000, perhari: 55000, masaAktif: 95 },
+      { kode: 'E', harga: 500000, perhari: 80000, masaAktif: 95 },
+      { kode: 'F', harga: 650000, perhari: 115000, masaAktif: 95 },
+      { kode: 'G', harga: 800000, perhari: 155000, masaAktif: 95 },
+      { kode: 'H', harga: 1000000, perhari: 235000, masaAktif: 95 },
+      { kode: 'I', harga: 2200000, perhari: 420000, masaAktif: 95 }
+    ];
+
+    function formatRupiah(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+
+    function generateProduk(){
+      const grid = document.getElementById('produkGrid');
+      grid.innerHTML = '';
+      
+      produkList.forEach((produk, i) => {
+        const div = document.createElement('div');
+        div.className = 'produk-item';
+        div.innerHTML = `
+          <div class="produk-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Logo">
+          </div>
+          <div class='title'>PAKET ${produk.kode}</div>
+          <div class='price'>Rp ${formatRupiah(produk.harga)}</div>
+          <div class="divider"></div>
+          <div class='info'>
+            <span>Per Hari:</span>
+            <span class="value">Rp ${formatRupiah(produk.perhari)}</span>
+          </div>
+          <div class='info'>
+            <span>Masa Aktif:</span>
+            <span class="value">${produk.masaAktif} Hari</span>
+          </div>
+          <div class="divider"></div>
+          <button onclick="buyProduct('${produk.kode}', ${produk.harga})">Beli Sekarang</button>`;
+        grid.appendChild(div);
+      });
+    }
+
+    async function loadSaldo(){
+      const nohp = localStorage.getItem('nohp');
+      if(!nohp){
+        document.getElementById('saldoTotal').textContent = 'Rp 0';
+        return;
+      }
+      const refUser = ref(db, 'users/' + nohp);
+      const snap = await get(refUser);
+      if(snap.exists()){
+        const data = snap.val();
+        document.getElementById('saldoTotal').textContent = 'Rp ' + formatRupiah(data.saldo || 0);
+      }
+    }
+
+    // Fungsi untuk membeli produk
+    async function buyProduct(kode, harga) {
+      const nohp = localStorage.getItem('nohp');
+      if (!nohp) {
+        showMessage('Error', 'Anda harus login terlebih dahulu');
+        return;
+      }
+
+      // Cek saldo user
+      const refUser = ref(db, 'users/' + nohp);
+      const snap = await get(refUser);
+      
+      if (!snap.exists()) {
+        showMessage('Error', 'Data user tidak ditemukan');
+        return;
+      }
+
+      const userData = snap.val();
+      const saldoSekarang = userData.saldo || 0;
+
+      if (saldoSekarang < harga) {
+        showMessage('Saldo Tidak Cukup', 'SALDO AKUN TIDAK CUKUP');
+        return;
+      }
+
+      // Saldo cukup, lakukan pembelian
+      try {
+        // Kurangi saldo user
+        const updates = {};
+        updates['/users/' + nohp + '/saldo'] = saldoSekarang - harga;
+        
+        // Catat pembelian
+        updates['/purchases/' + nohp + '/' + kode] = {
+          tanggal: new Date().toISOString(),
+          harga: harga,
+          status: 'active'
+        };
+
+        // Berikan komisi ke upline jika ini pembelian pertama
+        if (!userData.purchases || !userData.purchases[kode]) {
+          // Logika komisi untuk upline
+          if (userData.upline) {
+            const refUpline1 = ref(db, 'users/' + userData.upline);
+            const snapUpline1 = await get(refUpline1);
+            
+            if (snapUpline1.exists()) {
+              const upline1Data = snapUpline1.val();
+              const komisi1 = Math.round(harga * 0.25); // 25% untuk level 1
+              updates['/users/' + userData.upline + '/saldo'] = (upline1Data.saldo || 0) + komisi1;
+              
+              // Catat komisi untuk level 1
+              updates['/commissions/' + userData.upline + '/' + Date.now()] = {
+                dari: nohp,
+                paket: kode,
+                jumlah: komisi1,
+                level: 1,
+                tanggal: new Date().toISOString()
+              };
+
+              // Cek upline level 2
+              if (upline1Data.upline) {
+                const refUpline2 = ref(db, 'users/' + upline1Data.upline);
+                const snapUpline2 = await get(refUpline2);
+                
+                if (snapUpline2.exists()) {
+                  const upline2Data = snapUpline2.val();
+                  const komisi2 = Math.round(harga * 0.02); // 2% untuk level 2
+                  updates['/users/' + upline1Data.upline + '/saldo'] = (upline2Data.saldo || 0) + komisi2;
+                  
+                  // Catat komisi untuk level 2
+                  updates['/commissions/' + upline1Data.upline + '/' + Date.now()] = {
+                    dari: nohp,
+                    paket: kode,
+                    jumlah: komisi2,
+                    level: 2,
+                    tanggal: new Date().toISOString()
+                  };
+
+                  // Cek upline level 3
+                  if (upline2Data.upline) {
+                    const refUpline3 = ref(db, 'users/' + upline2Data.upline);
+                    const snapUpline3 = await get(refUpline3);
+                    
+                    if (snapUpline3.exists()) {
+                      const upline3Data = snapUpline3.val();
+                      const komisi3 = Math.round(harga * 0.01); // 1% untuk level 3
+                      updates['/users/' + upline2Data.upline + '/saldo'] = (upline3Data.saldo || 0) + komisi3;
+                      
+                      // Catat komisi untuk level 3
+                      updates['/commissions/' + upline2Data.upline + '/' + Date.now()] = {
+                        dari: nohp,
+                        paket: kode,
+                        jumlah: komisi3,
+                        level: 3,
+                        tanggal: new Date().toISOString()
+                      };
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Tandai bahwa user sudah pernah membeli paket ini
+        updates['/users/' + nohp + '/purchases/' + kode] = true;
+
+        // Eksekusi semua update
+        await update(ref(db), updates);
+
+        // Tampilkan pesan sukses
+        showMessage('Pembelian Berhasil', `PEMBELIAN PAKET ${kode} BERHASIL`, true);
+        
+      } catch (error) {
+        console.error('Error saat pembelian:', error);
+        showMessage('Error', 'Terjadi kesalahan saat memproses pembelian');
+      }
+    }
+
+    // Fungsi untuk menampilkan modal pesan
+    function showMessage(title, message, refresh = false) {
+      const modal = document.getElementById('messageModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalButton = document.getElementById('modalButton');
+      
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      
+      modal.style.display = 'flex';
+      
+      modalButton.onclick = function() {
+        modal.style.display = 'none';
+        if (refresh) {
+          location.reload();
+        }
+      };
+    }
+
+    // Fungsi navigasi langsung tanpa pemberitahuan
+    function goPage(page) {
+      window.location.href = page;
+    }
+
+    window.goPage = goPage;
+    window.buyProduct = buyProduct;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      generateProduk();
+      loadSaldo();
+    });
+  </script>
+</body>
+</html>

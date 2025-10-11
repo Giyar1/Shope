@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Apple Invest - Undang Teman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --primary:#007AFF;
+      --primary-light:#5AC8FA;
+      --secondary:#FF2D55;
+      --accent:#32D74B;
+      --bg:#F9FAFB;
+      --card:#FFFFFF;
+      --text:#1D1D1F;
+      --muted:#6B6B70;
+      --border:#E5E5EA;
+      --gold:#FFD700;
+      --purple:#BF5AF2;
+      --gradient-primary:linear-gradient(135deg, #007AFF, #5AC8FA);
+      --gradient-secondary:linear-gradient(135deg, #FF2D55, #FF6B8B);
+      --gradient-accent:linear-gradient(135deg, #32D74B, #64D2FF);
+      --gradient-gold:linear-gradient(135deg, #FFD700, #FF9500);
+      --gradient-purple:linear-gradient(135deg, #BF5AF2, #AC8EF9);
+      --shadow-sm:0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg:0 8px 24px rgba(0,0,0,0.12);
+    }
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header{
+      background:linear-gradient(180deg,#fff,#f3f4f6);
+      padding:20px 16px 30px;
+      border-bottom:1px solid var(--border);
+      box-shadow:var(--shadow-sm);
+      position:relative;
+      overflow:hidden;
+    }
+    header::before {
+      content:'';
+      position:absolute;
+      top:0;
+      right:0;
+      width:200px;
+      height:200px;
+      background:var(--gradient-primary);
+      border-radius:50%;
+      filter:blur(60px);
+      opacity:0.1;
+      z-index:0;
+    }
+    .header-top{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:20px;
+      position:relative;
+      z-index:1;
+    }
+    .company-card {
+      background: var(--gradient-primary);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+      color: white;
+      width: 100%;
+    }
+    .company-logo{
+      width:60px;height:60px;
+      border-radius:16px;
+      background:rgba(255,255,255,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--shadow-md);
+      border:2px solid rgba(255,255,255,0.3);
+    }
+    .company-logo img{
+      width:36px;
+      height:36px;
+      filter:brightness(0) invert(1);
+    }
+    .company-text {
+      line-height: 1.3;
+      flex: 1;
+    }
+    .company-name{
+      font-weight:700;
+      font-size:20px;
+      color: white;
+      margin-bottom: 4px;
+    }
+    .company-desc{
+      font-size:14px;
+      color:rgba(255,255,255,0.9);
+      font-weight: 400;
+    }
+
+    .back-button {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .back-button:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .back-button img {
+      width: 20px;
+      height: 20px;
+      filter: brightness(0) invert(1);
+    }
+
+    main{
+      padding:20px 16px;
+      max-width:1000px;
+      margin:auto;
+      padding-bottom: 80px; /* Memberi ruang untuk navigasi bawah */
+    }
+
+    .referral-card {
+      background: var(--gradient-primary);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      color: white;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .referral-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 150px;
+      height: 150px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+    .referral-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60%;
+      left: -10%;
+      width: 120px;
+      height: 120px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+    .referral-card h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .referral-code {
+      background: rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      border: 2px dashed rgba(255,255,255,0.3);
+      position: relative;
+      z-index: 1;
+    }
+    .referral-url {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text);
+      position: relative;
+      z-index: 1;
+    }
+    .referral-url span {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+    .copy-btn {
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: 8px;
+      font-size: 12px;
+    }
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .share-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+    .share-btn {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
+    }
+    .share-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-card .label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .stat-card .value {
+      font-size: 24px;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card:nth-child(2) .value {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card:nth-child(3) .value {
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card:nth-child(4) .value {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 20px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+    }
+
+    .commission-structure {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .commission-level {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .commission-level:last-child {
+      border-bottom: none;
+    }
+    .level-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .level-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .level-1 .level-badge {
+      background: var(--gradient-primary);
+    }
+    .level-2 .level-badge {
+      background: var(--gradient-accent);
+    }
+    .level-3 .level-badge {
+      background: var(--gradient-secondary);
+    }
+    .level-details h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .level-details p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .commission-amount {
+      text-align: right;
+    }
+    .commission-percent {
+      font-size: 20px;
+      font-weight: 700;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .level-2 .commission-percent {
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .level-3 .commission-percent {
+      background: var(--gradient-secondary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .commission-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .referral-list {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .referral-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .tab {
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+    }
+    .referral-items {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .referral-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .referral-item:last-child {
+      border-bottom: none;
+    }
+    .referral-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .referral-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+    .referral-details h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .referral-details p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .referral-amount {
+      text-align: right;
+    }
+    .referral-amount .amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .referral-amount .date {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+    .empty-state img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    .empty-state h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      animation: modalAppear 0.3s ease;
+    }
+    @keyframes modalAppear {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    .modal p {
+      margin-bottom: 20px;
+      color: var(--muted);
+    }
+    .modal button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .modal button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    nav.bottom{
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:#fff;
+      border-top:1px solid var(--border);
+      display:flex;
+      justify-content:space-around;
+      align-items:center;
+      padding:12px 0;
+      box-shadow:0 -2px 10px rgba(0,0,0,0.05);
+      z-index:100;
+    }
+    nav.bottom button{
+      background:none;
+      border:none;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      transition:all 0.3s ease;
+      padding:8px 12px;
+      border-radius:12px;
+      cursor: pointer;
+    }
+    nav.bottom button.active{
+      color:var(--primary);
+      font-weight:700;
+      background:rgba(0,122,255,0.1);
+    }
+    nav.bottom img{
+      width:22px;
+      height:22px;
+      transition:transform 0.3s ease;
+    }
+    nav.bottom button.active img{
+      transform:scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div class="company-card">
+        <button class="back-button" onclick="goPage('index.html')">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/back.png" alt="Kembali">
+        </button>
+        <div class="company-text">
+          <div class="company-name">Undang Teman</div>
+          <div class="company-desc">Dapatkan komisi dengan mengundang teman</div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    <div class="referral-card">
+      <h2>Kode Referral Anda</h2>
+      <div class="referral-code" id="referralCode">LOADING</div>
+      <div class="referral-url">
+        <span id="referralUrl">Loading...</span>
+        <button class="copy-btn" onclick="copyReferralUrl()">Salin</button>
+      </div>
+      <div class="share-buttons">
+        <button class="share-btn" onclick="shareToWhatsApp()">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png" width="20" height="20">
+          WhatsApp
+        </button>
+        <button class="share-btn" onclick="shareToTelegram()">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/telegram-app.png" width="20" height="20">
+          Telegram
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="label">Total Komisi</div>
+        <div class="value" id="totalKomisi">Rp 0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Referral Level 1</div>
+        <div class="value" id="referralL1">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Referral Level 2</div>
+        <div class="value" id="referralL2">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Referral Level 3</div>
+        <div class="value" id="referralL3">0</div>
+      </div>
+    </div>
+
+    <section class="commission-section">
+      <h2 class="section-title">Struktur Komisi</h2>
+      <div class="commission-structure">
+        <div class="commission-level level-1">
+          <div class="level-info">
+            <div class="level-badge">1</div>
+            <div class="level-details">
+              <h3>Level 1 - Langsung</h3>
+              <p>Teman yang Anda undang langsung</p>
+            </div>
+          </div>
+          <div class="commission-amount">
+            <div class="commission-percent">25%</div>
+            <div class="commission-desc">dari pembelian pertama</div>
+          </div>
+        </div>
+        <div class="commission-level level-2">
+          <div class="level-info">
+            <div class="level-badge">2</div>
+            <div class="level-details">
+              <h3>Level 2 - Tidak Langsung</h3>
+              <p>Teman yang diundang oleh Level 1 Anda</p>
+            </div>
+          </div>
+          <div class="commission-amount">
+            <div class="commission-percent">2%</div>
+            <div class="commission-desc">dari pembelian pertama</div>
+          </div>
+        </div>
+        <div class="commission-level level-3">
+          <div class="level-info">
+            <div class="level-badge">3</div>
+            <div class="level-details">
+              <h3>Level 3 - Tidak Langsung</h3>
+              <p>Teman yang diundang oleh Level 2 Anda</p>
+            </div>
+          </div>
+          <div class="commission-amount">
+            <div class="commission-percent">1%</div>
+            <div class="commission-desc">dari pembelian pertama</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="referral-history">
+      <h2 class="section-title">Riwayat Komisi</h2>
+      <div class="referral-list">
+        <div class="referral-tabs">
+          <div class="tab active" onclick="switchTab('all')">Semua</div>
+          <div class="tab" onclick="switchTab('level1')">Level 1</div>
+          <div class="tab" onclick="switchTab('level2')">Level 2</div>
+          <div class="tab" onclick="switchTab('level3')">Level 3</div>
+        </div>
+        <div class="referral-items" id="referralItems">
+          <!-- Data referral akan dimuat di sini -->
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Modal untuk pesan -->
+  <div class="modal" id="messageModal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Berhasil</h3>
+      <p id="modalMessage">Pesan berhasil ditampilkan.</p>
+      <button id="modalButton">Tutup</button>
+    </div>
+  </div>
+  
+  <nav class="bottom">
+    <button onclick="goPage('index.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/home.png">
+      <span>Beranda</span>
+    </button>
+    <button onclick="goPage('investasi.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/combo-chart.png">
+      <span>Investasi</span>
+    </button>
+    <button class="active" onclick="goPage('undang.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/share.png">
+      <span>Undang</span>
+    </button>
+    <button onclick="goPage('profil.html')">
+      <img src="https://img.icons8.com/ios-filled/50/007aff/user-male-circle.png">
+      <span>Profil</span>
+    </button>
+  </nav>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+      authDomain: "lginvest-776cf.firebaseapp.com",
+      databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+      projectId: "lginvest-776cf",
+      storageBucket: "lginvest-776cf.firebasestorage.app",
+      messagingSenderId: "831934282072",
+      appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+      measurementId: "G-265YF9DYCF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    function formatRupiah(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+
+    // Fungsi untuk memuat data referral user
+    async function loadReferralData() {
+      const nohp = localStorage.getItem('nohp');
+      if (!nohp) {
+        showMessage('Error', 'Anda harus login terlebih dahulu');
+        return;
+      }
+
+      try {
+        // Ambil data user
+        const refUser = ref(db, 'users/' + nohp);
+        const snapUser = await get(refUser);
+        
+        if (!snapUser.exists()) {
+          showMessage('Error', 'Data user tidak ditemukan');
+          return;
+        }
+
+        const userData = snapUser.val();
+        
+        // Tampilkan kode referral
+        document.getElementById('referralCode').textContent = userData.referral_code || 'TIDAK ADA';
+        document.getElementById('referralUrl').textContent = window.location.origin + window.location.pathname.replace('undang.html', 'registrasi.html') + '?ref=' + userData.referral_code;
+
+        // Hitung statistik referral
+        let totalKomisi = 0;
+        let referralL1 = 0;
+        let referralL2 = 0;
+        let referralL3 = 0;
+
+        // Ambil data komisi
+        const refCommissions = ref(db, 'commissions/' + nohp);
+        const snapCommissions = await get(refCommissions);
+        
+        if (snapCommissions.exists()) {
+          const commissions = snapCommissions.val();
+          
+          for (const key in commissions) {
+            const commission = commissions[key];
+            totalKomisi += commission.jumlah;
+            
+            // Hitung jumlah referral per level
+            if (commission.level === 1) {
+              referralL1++;
+            } else if (commission.level === 2) {
+              referralL2++;
+            } else if (commission.level === 3) {
+              referralL3++;
+            }
+          }
+        }
+
+        // Update tampilan statistik
+        document.getElementById('totalKomisi').textContent = 'Rp ' + formatRupiah(totalKomisi);
+        document.getElementById('referralL1').textContent = referralL1;
+        document.getElementById('referralL2').textContent = referralL2;
+        document.getElementById('referralL3').textContent = referralL3;
+
+        // Tampilkan riwayat komisi
+        loadCommissionHistory(nohp);
+
+      } catch (error) {
+        console.error('Error memuat data referral:', error);
+        showMessage('Error', 'Terjadi kesalahan saat memuat data referral');
+      }
+    }
+
+    // Fungsi untuk memuat riwayat komisi
+    async function loadCommissionHistory(nohp, filter = 'all') {
+      const refCommissions = ref(db, 'commissions/' + nohp);
+      const snapCommissions = await get(refCommissions);
+      
+      const referralItems = document.getElementById('referralItems');
+      referralItems.innerHTML = '';
+      
+      if (!snapCommissions.exists()) {
+        referralItems.innerHTML = `
+          <div class="empty-state">
+            <img src="https://img.icons8.com/ios-filled/100/6B6B70/money-bag.png" alt="Tidak ada komisi">
+            <h3>Belum Ada Komisi</h3>
+            <p>Anda belum mendapatkan komisi dari referral</p>
+          </div>
+        `;
+        return;
+      }
+
+      const commissions = snapCommissions.val();
+      let hasItems = false;
+
+      for (const key in commissions) {
+        const commission = commissions[key];
+        
+        // Filter berdasarkan level
+        if (filter !== 'all' && commission.level !== parseInt(filter.replace('level', ''))) {
+          continue;
+        }
+        
+        hasItems = true;
+        
+        // Format tanggal
+        const date = new Date(commission.tanggal);
+        const formattedDate = date.toLocaleDateString('id-ID', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        
+        // Buat elemen riwayat
+        const div = document.createElement('div');
+        div.className = 'referral-item';
+        div.innerHTML = `
+          <div class="referral-info">
+            <div class="referral-avatar">${commission.dari.substring(0, 2)}</div>
+            <div class="referral-details">
+              <h4>${commission.dari}</h4>
+              <p>Level ${commission.level} - Paket ${commission.paket}</p>
+            </div>
+          </div>
+          <div class="referral-amount">
+            <div class="amount">+Rp ${formatRupiah(commission.jumlah)}</div>
+            <div class="date">${formattedDate}</div>
+          </div>
+        `;
+        referralItems.appendChild(div);
+      }
+      
+      if (!hasItems) {
+        referralItems.innerHTML = `
+          <div class="empty-state">
+            <img src="https://img.icons8.com/ios-filled/100/6B6B70/money-bag.png" alt="Tidak ada komisi">
+            <h3>Tidak Ada Data</h3>
+            <p>Tidak ada komisi untuk filter ini</p>
+          </div>
+        `;
+      }
+    }
+
+    // Fungsi untuk menyalin URL referral
+    function copyReferralUrl() {
+      const url = document.getElementById('referralUrl').textContent;
+      navigator.clipboard.writeText(url).then(() => {
+        showMessage('Berhasil', 'URL referral berhasil disalin');
+      }).catch(err => {
+        console.error('Gagal menyalin: ', err);
+        showMessage('Error', 'Gagal menyalin URL');
+      });
+    }
+
+    // Fungsi untuk berbagi ke WhatsApp
+    function shareToWhatsApp() {
+      const url = document.getElementById('referralUrl').textContent;
+      const message = `Hai! Saya ingin mengundang Anda untuk bergabung dengan Apple Invest. Dapatkan keuntungan investasi yang menarik. Gunakan kode referral saya: ${document.getElementById('referralCode').textContent}\n\n${url}`;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // Fungsi untuk berbagi ke Telegram
+    function shareToTelegram() {
+      const url = document.getElementById('referralUrl').textContent;
+      const message = `Hai! Saya ingin mengundang Anda untuk bergabung dengan Apple Invest. Dapatkan keuntungan investasi yang menarik. Gunakan kode referral saya: ${document.getElementById('referralCode').textContent}\n\n${url}`;
+      const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(message)}`;
+      window.open(telegramUrl, '_blank');
+    }
+
+    // Fungsi untuk mengganti tab
+    function switchTab(tab) {
+      // Update tab aktif
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Muat data berdasarkan tab
+      const nohp = localStorage.getItem('nohp');
+      if (nohp) {
+        loadCommissionHistory(nohp, tab);
+      }
+    }
+
+    // Fungsi untuk menampilkan modal pesan
+    function showMessage(title, message) {
+      const modal = document.getElementById('messageModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalButton = document.getElementById('modalButton');
+      
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      
+      modal.style.display = 'flex';
+      
+      modalButton.onclick = function() {
+        modal.style.display = 'none';
+      };
+    }
+
+    // Fungsi navigasi langsung tanpa pemberitahuan
+    function goPage(page) {
+      window.location.href = page;
+    }
+
+    window.goPage = goPage;
+    window.copyReferralUrl = copyReferralUrl;
+    window.shareToWhatsApp = shareToWhatsApp;
+    window.shareToTelegram = shareToTelegram;
+    window.switchTab = switchTab;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadReferralData();
+    });
+  </script>
+</body>
+</html>

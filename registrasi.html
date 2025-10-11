@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Buat Apple ID Baru</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    :root {
+      --apple-blue: #007AFF;
+      --apple-purple: #5856D6;
+      --apple-pink: #FF2D55;
+      --apple-orange: #FF9500;
+      --apple-green: #34C759;
+      --apple-black: #1D1D1F;
+      --apple-dark-gray: #424245;
+      --apple-gray: #86868B;
+      --apple-light-gray: #D2D2D7;
+      --apple-bg: #F5F5F7;
+      --apple-white: #FFFFFF;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f2f2f7 0%, #e5e5ea 50%, #f2f2f7 100%);
+      color: var(--apple-black);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background-color: var(--apple-white);
+      color: var(--apple-black);
+      padding: 40px 35px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .apple-logo {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 32px;
+      font-weight: 300;
+      box-shadow: 0 4px 12px rgba(88, 86, 214, 0.3);
+      transition: transform 0.3s;
+    }
+
+    .apple-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .card h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--apple-gray);
+      font-size: 16px;
+    }
+
+    .form-container {
+      margin-top: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 22px;
+      position: relative;
+    }
+
+    .input-label {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--apple-dark-gray);
+    }
+
+    .input-label i {
+      margin-right: 8px;
+      font-size: 14px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 1.5px solid var(--apple-light-gray);
+      border-radius: 12px;
+      font-size: 16px;
+      background-color: var(--apple-white);
+      color: var(--apple-black);
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+    }
+
+    input.error {
+      border-color: var(--apple-pink);
+      box-shadow: 0 0 0 4px rgba(255, 45, 85, 0.1);
+    }
+
+    input.success {
+      border-color: var(--apple-green);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--apple-gray);
+      font-size: 18px;
+    }
+
+    .toggle-password {
+      background: none;
+      border: none;
+      color: var(--apple-gray);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .toggle-password:hover {
+      color: var(--apple-blue);
+    }
+
+    .input-hint {
+      font-size: 13px;
+      color: var(--apple-gray);
+      margin-top: 6px;
+      display: block;
+      padding-left: 22px;
+    }
+
+    .input-hint.error {
+      color: var(--apple-pink);
+    }
+
+    .input-hint.success {
+      color: var(--apple-green);
+    }
+
+    .captcha-section {
+      background: linear-gradient(135deg, rgba(0, 122, 255, 0.05) 0%, rgba(88, 86, 214, 0.05) 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 25px 0;
+      border: 1px solid rgba(0, 122, 255, 0.1);
+    }
+
+    .captcha-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .captcha-display {
+      background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      flex: 1;
+      text-align: center;
+      user-select: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(88, 86, 214, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .captcha-display:hover {
+      transform: scale(1.02);
+      background: linear-gradient(135deg, var(--apple-purple) 0%, var(--apple-blue) 100%);
+    }
+
+    .captcha-display:active {
+      transform: scale(0.98);
+    }
+
+    .captcha-display::after {
+      content: '⟳';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .captcha-input {
+      flex: 2;
+      padding: 12px 16px;
+      border: 1.5px solid var(--apple-light-gray);
+      border-radius: 10px;
+      font-size: 16px;
+      background-color: var(--apple-white);
+      color: var(--apple-black);
+      transition: all 0.3s;
+    }
+
+    .captcha-input:focus {
+      outline: none;
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+    }
+
+    button.submit-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--apple-white);
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(88, 86, 214, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button.submit-btn:hover:enabled {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(88, 86, 214, 0.4);
+    }
+
+    button.submit-btn:active:enabled {
+      transform: translateY(0);
+    }
+
+    button.submit-btn:disabled {
+      background: var(--apple-light-gray);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--apple-light-gray), transparent);
+      margin: 25px 0;
+    }
+
+    .terms {
+      font-size: 14px;
+      color: var(--apple-gray);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .terms a {
+      color: var(--apple-blue);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .terms a:hover {
+      color: var(--apple-purple);
+      text-decoration: underline;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 16px;
+      color: var(--apple-gray);
+    }
+
+    .login-link a {
+      color: var(--apple-blue);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+
+    .login-link a:hover {
+      color: var(--apple-purple);
+      text-decoration: underline;
+    }
+
+    .notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--apple-white);
+      color: var(--apple-black);
+      padding: 30px;
+      border-radius: 20px;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      border-top: 5px solid var(--apple-blue);
+      max-width: 85%;
+      width: 380px;
+      animation: notificationSlide 0.3s ease-out;
+    }
+
+    @keyframes notificationSlide {
+      from { opacity: 0; transform: translate(-50%, -40%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .notification.error {
+      border-top-color: var(--apple-pink);
+    }
+
+    .notification.success {
+      border-top-color: var(--apple-green);
+    }
+
+    .notification-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: var(--apple-blue);
+    }
+
+    .notification.error .notification-icon {
+      color: var(--apple-pink);
+    }
+
+    .notification.success .notification-icon {
+      color: var(--apple-green);
+    }
+
+    .notification-message {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 25px;
+    }
+
+    .notification button {
+      background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+      margin-top: 10px;
+      width: auto;
+      padding: 12px 30px;
+      border-radius: 10px;
+      border: none;
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+
+    .notification button:hover {
+      transform: scale(1.05);
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 30px 25px;
+        border-radius: 16px;
+      }
+      
+      .card h1 {
+        font-size: 24px;
+      }
+      
+      input {
+        padding: 14px 16px;
+      }
+      
+      .captcha-container {
+        flex-direction: column;
+      }
+      
+      .captcha-display {
+        width: 100%;
+      }
+      
+      .notification {
+        width: 90%;
+        padding: 25px;
+      }
+    }
+
+    .progress-bar {
+      height: 4px;
+      background-color: var(--apple-light-gray);
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, var(--apple-blue) 0%, var(--apple-purple) 100%);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .password-strength {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .strength-label {
+      font-size: 12px;
+      color: var(--apple-gray);
+    }
+
+    .language-selector {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .language-selector select {
+      background: transparent;
+      border: 1px solid var(--apple-light-gray);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 14px;
+      color: var(--apple-dark-gray);
+      cursor: pointer;
+    }
+
+    .privacy-note {
+      background: rgba(0, 122, 255, 0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: var(--apple-dark-gray);
+      border-left: 3px solid var(--apple-blue);
+    }
+
+    .privacy-note i {
+      color: var(--apple-blue);
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="language-selector">
+      <select id="language">
+        <option value="id">Bahasa Indonesia</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+    
+    <div class="card">
+      <div class="header">
+        <div class="apple-logo">
+          <i class="fa-brands fa-apple"></i>
+        </div>
+        <h1>Buat Apple ID</h1>
+        <p class="subtitle">Buat akun untuk mulai berinvestasi</p>
+      </div>
+      
+      <div class="privacy-note">
+        <i class="fas fa-shield-alt"></i>
+        <span>Informasi Anda aman dan terenkripsi.</span>
+      </div>
+      
+      <div class="form-container">
+        <form onsubmit="register(event)">
+          <div class="input-group">
+            <label class="input-label">
+              <i class="fas fa-mobile-alt"></i>Nomor Telepon
+            </label>
+            <div class="input-wrapper">
+              <input type="tel" id="nohp" placeholder="8xxxxxxxxxx" required autofocus />
+              <span class="input-icon"><i class="fas fa-mobile-alt"></i></span>
+            </div>
+            <span class="input-hint" id="phoneHint">Harus diawali dengan 8, 11-12 digit angka</span>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">
+              <i class="fas fa-lock"></i>Kata Sandi
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="password" placeholder="Minimal 6 karakter" minlength="6" required />
+              <button type="button" class="toggle-password input-icon" onclick="togglePassword('password')">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="passwordStrength"></div>
+            </div>
+            <div class="password-strength">
+              <span class="strength-label">Kekuatan kata sandi</span>
+              <span class="strength-label" id="strengthText">Lemah</span>
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">
+              <i class="fas fa-redo"></i>Konfirmasi Kata Sandi
+            </label>
+            <div class="input-wrapper">
+              <input type="password" id="confirmPassword" placeholder="Ketik ulang kata sandi" required />
+              <button type="button" class="toggle-password input-icon" onclick="togglePassword('confirmPassword')">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <span class="input-hint" id="confirmHint">Kedua kata sandi harus sama</span>
+          </div>
+          
+          <div class="input-group">
+            <label class="input-label">
+              <i class="fas fa-gift" style="color: var(--apple-orange);"></i>Kode Undangan (Opsional)
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="referral" placeholder="Masukkan kode undangan" />
+              <span class="input-icon"><i class="fas fa-gift" style="color: var(--apple-orange);"></i></span>
+            </div>
+          </div>
+          
+          <div class="captcha-section">
+            <label class="input-label">
+              <i class="fas fa-shield-alt"></i>Kode Keamanan
+            </label>
+            <div class="captcha-container">
+              <div class="captcha-display" id="captchaCode" onclick="generateCaptcha()">
+                <span id="captchaText">6624</span>
+              </div>
+              <input type="text" class="captcha-input" id="captchaInput" placeholder="Masukkan kode" maxlength="4" required />
+            </div>
+            <span class="input-hint">Klik kode untuk memperbarui</span>
+          </div>
+          
+          <button type="submit" class="submit-btn" id="btnDaftar">
+            <span id="btnText">Buat Apple ID</span>
+            <div id="btnSpinner" style="display: none;">
+              <i class="fas fa-spinner fa-spin"></i> Memproses...
+            </div>
+          </button>
+        </form>
+        
+        <div class="divider"></div>
+        
+        <div class="terms">
+          Dengan membuat Apple ID, Anda menyetujui 
+          <a href="#">Ketentuan Layanan</a> dan 
+          <a href="#">Kebijakan Privasi</a> Apple.
+        </div>
+        
+        <div class="login-link">
+          <a href="login.html">
+            <i class="fas fa-arrow-left"></i> Sudah punya Apple ID? Masuk
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="notification" id="notification">
+    <div class="notification-icon">
+      <i class="fas fa-check-circle" id="notificationIcon"></i>
+    </div>
+    <div class="notification-message" id="notificationMessage"></div>
+    <button onclick="hideNotification()">Lanjutkan</button>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, update, set } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Notification functions
+function showNotification(msg, isError = false, isSuccess = false) {
+  const notification = document.getElementById('notification');
+  const overlay = document.getElementById('overlay');
+  const message = document.getElementById('notificationMessage');
+  const icon = document.getElementById('notificationIcon');
+  
+  message.textContent = msg;
+  
+  if (isError) {
+    notification.className = 'notification error';
+    icon.className = 'fas fa-exclamation-circle';
+  } else if (isSuccess) {
+    notification.className = 'notification success';
+    icon.className = 'fas fa-check-circle';
+  } else {
+    notification.className = 'notification';
+    icon.className = 'fas fa-info-circle';
+  }
+  
+  notification.style.display = 'block';
+  overlay.style.display = 'block';
+  
+  // Auto hide notification after 3 seconds for errors
+  if (isError) {
+    setTimeout(() => {
+      hideNotification();
+    }, 3000);
+  }
+}
+
+function hideNotification() {
+  document.getElementById('notification').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// Toggle password visibility
+function togglePassword(fieldId) {
+  const field = document.getElementById(fieldId);
+  const button = field.parentElement.querySelector('.toggle-password');
+  const icon = button.querySelector('i');
+  const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+  
+  field.setAttribute('type', type);
+  
+  if (type === 'password') {
+    icon.className = 'fas fa-eye';
+  } else {
+    icon.className = 'fas fa-eye-slash';
+  }
+}
+
+// Generate captcha code
+function generateCaptcha() {
+  const captcha = Math.floor(1000 + Math.random() * 9000).toString();
+  document.getElementById('captchaText').textContent = captcha;
+  
+  // Add animation effect
+  const captchaDisplay = document.getElementById('captchaCode');
+  captchaDisplay.style.transform = 'scale(0.95)';
+  setTimeout(() => {
+    captchaDisplay.style.transform = 'scale(1)';
+  }, 150);
+  
+  return captcha;
+}
+
+// Validate phone number
+function validatePhoneNumber(phone) {
+  return /^8\d{10,11}$/.test(phone);
+}
+
+// Validate password strength
+function checkPasswordStrength(password) {
+  let strength = 0;
+  
+  if (password.length >= 6) strength += 25;
+  if (password.length >= 8) strength += 15;
+  if (/[A-Z]/.test(password)) strength += 20;
+  if (/[0-9]/.test(password)) strength += 20;
+  if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+  
+  return Math.min(strength, 100);
+}
+
+// Validate passwords match
+function validatePasswordMatch(password, confirmPassword) {
+  return password === confirmPassword && password !== '';
+}
+
+// Real-time validation
+document.addEventListener('DOMContentLoaded', function() {
+  const nohpInput = document.getElementById('nohp');
+  const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const phoneHint = document.getElementById('phoneHint');
+  const confirmHint = document.getElementById('confirmHint');
+  const passwordStrength = document.getElementById('passwordStrength');
+  const strengthText = document.getElementById('strengthText');
+  
+  // Phone number validation - auto remove 0 at beginning
+  nohpInput.addEventListener('input', function() {
+    // Remove any non-digit characters
+    this.value = this.value.replace(/\D/g, '');
+    
+    // If starts with 0, remove it
+    if (this.value.startsWith('0')) {
+      this.value = this.value.substring(1);
+    }
+    
+    // If doesn't start with 8, set to empty
+    if (this.value && !this.value.startsWith('8')) {
+      this.value = '8' + this.value.substring(1);
+    }
+    
+    const isValid = validatePhoneNumber(this.value);
+    
+    if (this.value && !isValid) {
+      this.classList.add('error');
+      this.classList.remove('success');
+      phoneHint.classList.add('error');
+      phoneHint.textContent = 'Nomor HP harus 11-12 digit dan diawali dengan 8';
+    } else if (isValid) {
+      this.classList.remove('error');
+      this.classList.add('success');
+      phoneHint.classList.remove('error');
+      phoneHint.classList.add('success');
+      phoneHint.textContent = 'Nomor HP valid';
+    } else {
+      this.classList.remove('error', 'success');
+      phoneHint.classList.remove('error', 'success');
+      phoneHint.textContent = 'Harus diawali dengan 8, 11-12 digit angka';
+    }
+    
+    updateSubmitButton();
+  });
+  
+  // Password validation
+  passwordInput.addEventListener('input', function() {
+    const strength = checkPasswordStrength(this.value);
+    passwordStrength.style.width = strength + '%';
+    
+    // Update strength text
+    if (strength < 40) {
+      strengthText.textContent = 'Lemah';
+      passwordStrength.style.background = 'linear-gradient(135deg, #FF3B30 0%, #FF9500 100%)';
+    } else if (strength < 70) {
+      strengthText.textContent = 'Cukup';
+      passwordStrength.style.background = 'linear-gradient(135deg, #FF9500 0%, #FFCC00 100%)';
+    } else {
+      strengthText.textContent = 'Kuat';
+      passwordStrength.style.background = 'linear-gradient(135deg, #34C759 0%, #5AC8FA 100%)';
+    }
+    
+    // Also update confirm password if it has value
+    if (confirmPasswordInput.value) {
+      const isMatch = validatePasswordMatch(this.value, confirmPasswordInput.value);
+      
+      if (confirmPasswordInput.value && !isMatch) {
+        confirmPasswordInput.classList.add('error');
+        confirmPasswordInput.classList.remove('success');
+        confirmHint.classList.add('error');
+        confirmHint.textContent = 'Kata sandi tidak cocok';
+      } else if (isMatch) {
+        confirmPasswordInput.classList.remove('error');
+        confirmPasswordInput.classList.add('success');
+        confirmHint.classList.remove('error');
+        confirmHint.classList.add('success');
+        confirmHint.textContent = 'Kata sandi cocok';
+      } else {
+        confirmPasswordInput.classList.remove('error', 'success');
+        confirmHint.classList.remove('error', 'success');
+        confirmHint.textContent = 'Kedua kata sandi harus sama';
+      }
+    }
+    
+    updateSubmitButton();
+  });
+  
+  // Confirm password validation
+  confirmPasswordInput.addEventListener('input', function() {
+    const isMatch = validatePasswordMatch(passwordInput.value, this.value);
+    
+    if (this.value && !isMatch) {
+      this.classList.add('error');
+      this.classList.remove('success');
+      confirmHint.classList.add('error');
+      confirmHint.textContent = 'Kata sandi tidak cocok';
+    } else if (isMatch) {
+      this.classList.remove('error');
+      this.classList.add('success');
+      confirmHint.classList.remove('error');
+      confirmHint.classList.add('success');
+      confirmHint.textContent = 'Kata sandi cocok';
+    } else {
+      this.classList.remove('error', 'success');
+      confirmHint.classList.remove('error', 'success');
+      confirmHint.textContent = 'Kedua kata sandi harus sama';
+    }
+    
+    updateSubmitButton();
+  });
+  
+  // Captcha validation
+  document.getElementById('captchaInput').addEventListener('input', function() {
+    updateSubmitButton();
+  });
+});
+
+// Update submit button state
+function updateSubmitButton() {
+  const nohp = document.getElementById('nohp').value;
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const captcha = document.getElementById('captchaInput').value;
+  
+  const isValid = validatePhoneNumber(nohp) && 
+                  password.length >= 6 && 
+                  validatePasswordMatch(password, confirmPassword) &&
+                  captcha.length === 4;
+  
+  document.getElementById('btnDaftar').disabled = !isValid;
+}
+
+// Generate kode referral 7 digit
+function generateReferralCode() {
+  return Math.floor(1000000 + Math.random() * 9000000).toString();
+}
+
+// Form submission handler
+window.register = async function(e) {
+  e.preventDefault();
+  
+  const nohp = document.getElementById('nohp').value.trim();
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const kodeRef = document.getElementById('referral').value.trim();
+  const captchaInput = document.getElementById('captchaInput').value;
+  const captchaCode = document.getElementById('captchaText').textContent;
+  
+  // Validate captcha
+  if (captchaInput !== captchaCode) {
+    showNotification("Kode keamanan tidak sesuai. Silakan coba lagi.", true);
+    generateCaptcha(); // Refresh captcha jika salah
+    document.getElementById('captchaInput').value = '';
+    document.getElementById('captchaInput').focus();
+    return;
+  }
+  
+  // Show loading state
+  const btn = document.getElementById('btnDaftar');
+  const btnText = document.getElementById('btnText');
+  const btnSpinner = document.getElementById('btnSpinner');
+  
+  btnText.style.display = 'none';
+  btnSpinner.style.display = 'block';
+  btn.disabled = true;
+
+  try {
+    // Check if user already exists
+    const userRef = ref(db, "users/" + nohp);
+    const snapshot = await get(userRef);
+    
+    if (snapshot.exists()) {
+      showNotification("Nomor telepon sudah terdaftar. Silakan gunakan nomor lain.", true);
+      
+      // Reset button state
+      btnText.style.display = 'block';
+      btnSpinner.style.display = 'none';
+      updateSubmitButton();
+      
+      // Refresh captcha
+      generateCaptcha();
+      document.getElementById('captchaInput').value = '';
+      return;
+    }
+
+    // Generate kode referral unik 7 digit
+    const referralCode = generateReferralCode();
+    
+    // Data user baru
+    const userData = {
+      nohp: nohp,
+      password: password,
+      saldo: 0,
+      referral_code: referralCode,
+      created_at: new Date().toISOString()
+    };
+
+    // Jika ada kode referral yang diinput, cari upline
+    if (kodeRef) {
+      // Cari user dengan kode referral yang sesuai
+      const usersRef = ref(db, 'users');
+      const usersSnap = await get(usersRef);
+      
+      if (usersSnap.exists()) {
+        const users = usersSnap.val();
+        let uplineNohp = null;
+        
+        // Cari user dengan kode referral yang sesuai
+        for (const userNohp in users) {
+          if (users[userNohp].referral_code === kodeRef) {
+            uplineNohp = userNohp;
+            break;
+          }
+        }
+        
+        // Jika ditemukan upline, simpan hubungan referral
+        if (uplineNohp) {
+          userData.upline = uplineNohp;
+          
+          // Update downline untuk upline
+          const uplineRef = ref(db, 'users/' + uplineNohp);
+          const uplineSnap = await get(uplineRef);
+          
+          if (uplineSnap.exists()) {
+            const uplineData = uplineSnap.val();
+            const downlineLevel1 = uplineData.downline_level1 || {};
+            downlineLevel1[nohp] = true;
+            
+            await update(uplineRef, { 
+              downline_level1: downlineLevel1 
+            });
+            
+            // Update downline level 2 untuk upline level 2
+            if (uplineData.upline) {
+              const upline2Ref = ref(db, 'users/' + uplineData.upline);
+              const upline2Snap = await get(upline2Ref);
+              
+              if (upline2Snap.exists()) {
+                const upline2Data = upline2Snap.val();
+                const downlineLevel2 = upline2Data.downline_level2 || {};
+                downlineLevel2[nohp] = true;
+                
+                await update(upline2Ref, { 
+                  downline_level2: downlineLevel2 
+                });
+                
+                // Update downline level 3 untuk upline level 3
+                if (upline2Data.upline) {
+                  const upline3Ref = ref(db, 'users/' + upline2Data.upline);
+                  const upline3Snap = await get(upline3Ref);
+                  
+                  if (upline3Snap.exists()) {
+                    const upline3Data = upline3Snap.val();
+                    const downlineLevel3 = upline3Data.downline_level3 || {};
+                    downlineLevel3[nohp] = true;
+                    
+                    await update(upline3Ref, { 
+                      downline_level3: downlineLevel3 
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Simpan data user baru
+    await set(userRef, userData);
+    
+    showNotification("Apple ID berhasil dibuat! Anda sekarang dapat mengakses semua layanan Apple.", false, true);
+    
+    // Redirect to dashboard after a delay
+    setTimeout(() => {
+      localStorage.setItem("nohp", nohp);
+      window.location.href = "dashboard.html";
+    }, 3000);
+
+  } catch(err) {
+    console.error("Registration error:", err);
+    showNotification("Terjadi kesalahan saat memproses pendaftaran. Silakan coba lagi.", true);
+    
+    // Reset button state
+    btnText.style.display = 'block';
+    btnSpinner.style.display = 'none';
+    updateSubmitButton();
+    
+    // Refresh captcha
+    generateCaptcha();
+    document.getElementById('captchaInput').value = '';
+  }
+};
+
+// Auto referral from URL
+document.addEventListener('DOMContentLoaded', function() {
+  const params = new URLSearchParams(window.location.search);
+  const kode = params.get('ref');
+  if (kode) document.getElementById('referral').value = kode;
+  
+  // Generate initial captcha
+  generateCaptcha();
+  
+  // Initialize button state
+  updateSubmitButton();
+  
+  // Add language selector functionality
+  document.getElementById('language').addEventListener('change', function() {
+    if (this.value === 'en') {
+      // In a real app, you would change the language here
+      alert('Language changed to English');
+    }
+  });
+});
+</script>
+
+</body>
+</html>
