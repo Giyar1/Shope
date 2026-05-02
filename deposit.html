@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>BitVault • Deposit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0A0D14; font-family: 'Inter', sans-serif; color: #fff; }
+    .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(240,185,11,0.08), #0A0D14); z-index: -2; }
+    .header { padding: 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid rgba(240,185,11,0.2); background: rgba(10,13,20,0.8); backdrop-filter: blur(8px); }
+    .back-btn { width: 38px; height: 38px; background: rgba(255,255,255,0.05); border-radius: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(240,185,11,0.3); }
+    .back-btn i { color: #F0B90B; font-size: 16px; }
+    .header h1 { font-size: 20px; font-weight: 600; color: #F0B90B; }
+    main { padding: 20px; max-width: 560px; margin: 0 auto; }
+    .card { background: #11161F; border-radius: 28px; padding: 20px; border: 1px solid rgba(240,185,11,0.2); box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-bottom: 20px; }
+    .form-group { margin-bottom: 18px; }
+    label { font-size: 13px; color: #8E9AAB; display: block; margin-bottom: 8px; }
+    select, input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(240,185,11,0.2); border-radius: 20px; padding: 14px 16px; color: #fff; font-size: 15px; outline: none; }
+    .quick-amounts { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; }
+    .quick-btn { background: rgba(240,185,11,0.1); border: 1px solid rgba(240,185,11,0.2); border-radius: 30px; padding: 8px 16px; font-size: 13px; color: #F0B90B; cursor: pointer; transition: 0.2s; }
+    .btn { background: #F0B90B; border: none; border-radius: 40px; padding: 14px; width: 100%; font-weight: 700; color: #0A0B10; cursor: pointer; font-size: 15px; transition: 0.2s; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .loader { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(0,0,0,0.3); border-radius: 50%; border-top-color: #0A0B10; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-card { background: #11161F; border-radius: 32px; max-width: 320px; width: 100%; padding: 28px 20px; text-align: center; border: 1px solid #F0B90B; }
+    .modal-card i { font-size: 48px; color: #F0B90B; margin-bottom: 12px; }
+    .modal-btn { background: #F0B90B; border: none; border-radius: 40px; padding: 12px; width: 100%; font-weight: 600; margin-top: 16px; cursor: pointer; }
+    .qris-modal .modal-card { max-width: 360px; }
+    .qris-img { width: 220px; height: 220px; margin: 12px auto; background: #fff; border-radius: 20px; padding: 12px; display: flex; align-items: center; justify-content: center; }
+    .qris-img img { max-width: 100%; max-height: 100%; }
+    .status-text { font-size: 13px; margin-top: 12px; color: #F0B90B; }
+    .small-note { font-size: 11px; color: #8E9AAB; margin-top: 8px; }
+  </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="header">
+  <div class="back-btn" onclick="window.location.href='profil.html'"><i class="fas fa-arrow-left"></i></div>
+  <h1>Deposit Saldo</h1>
+</div>
+<main>
+  <div class="card">
+    <div class="form-group">
+      <label>Metode Pembayaran</label>
+      <select id="methodSelect">
+        <option value="QRIS (Semua Aplikasi)">QRIS (GoPay, OVO, DANA, dll)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Nominal (IDR)</label>
+      <input type="text" id="amountInput" placeholder="Masukkan nominal" inputmode="numeric">
+      <div id="amountError" style="color:#EF4444; font-size:12px; margin-top:5px;"></div>
+    </div>
+    <div class="quick-amounts">
+      <button class="quick-btn" data-amount="10000">Rp 10.000</button>
+      <button class="quick-btn" data-amount="25000">Rp 25.000</button>
+      <button class="quick-btn" data-amount="50000">Rp 50.000</button>
+      <button class="quick-btn" data-amount="100000">Rp 100.000</button>
+      <button class="quick-btn" data-amount="250000">Rp 250.000</button>
+      <button class="quick-btn" data-amount="500000">Rp 500.000</button>
+    </div>
+    <button class="btn" id="submitBtn">Buat Pembayaran QRIS</button>
+  </div>
+</main>
+
+<!-- Modal Info Umum -->
+<div class="modal" id="infoModal">
+  <div class="modal-card">
+    <i class="fas fa-info-circle"></i>
+    <h3 id="modalTitle">Info</h3>
+    <p id="modalMsg"></p>
+    <button class="modal-btn" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<!-- Modal QRIS + Polling -->
+<div class="modal qris-modal" id="qrisModal">
+  <div class="modal-card">
+    <i class="fas fa-qrcode"></i>
+    <h3>Scan QRIS</h3>
+    <div class="qris-img" id="qrisImageContainer">
+      <img id="qrisImage" src="" alt="QR Code">
+    </div>
+    <p id="qrisAmount" style="font-weight:bold;margin:8px 0"></p>
+    <p id="qrisStatus" class="status-text">Menunggu pembayaran...</p>
+    <p class="small-note">Silakan scan QR menggunakan GoPay, OVO, DANA, ShopeePay, atau bank via QRIS</p>
+    <button class="modal-btn" id="closeQrisBtn" onclick="closeQrisModal()">Tutup</button>
+  </div>
+</div>
+
+<script>
+// Helper
+function formatRupiah(angka){ return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+function unformat(str){ return parseInt(str.replace(/[^0-9]/g,'')) || 0; }
+
+const amountInput = document.getElementById('amountInput');
+amountInput.addEventListener('input', function(e){
+  let val = e.target.value.replace(/[^0-9]/g,'');
+  if(val) e.target.value = parseInt(val).toLocaleString('id-ID');
+  validateAmount();
+});
+function validateAmount(){
+  let raw = unformat(amountInput.value);
+  let err = document.getElementById('amountError');
+  if(raw<1000) err.innerText='Minimal Rp 1.000';
+  else if(raw>25000000) err.innerText='Maksimal Rp 25.000.000';
+  else err.innerText='';
+  return raw>=1000 && raw<=25000000;
+}
+document.querySelectorAll('.quick-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    amountInput.value = parseInt(btn.dataset.amount).toLocaleString('id-ID');
+    validateAmount();
+  });
+});
+
+function showModal(title,msg){
+  document.getElementById('modalTitle').innerText=title;
+  document.getElementById('modalMsg').innerHTML=msg;
+  document.getElementById('infoModal').style.display='flex';
+}
+function closeModal(){ document.getElementById('infoModal').style.display='none'; }
+
+function closeQrisModal(){
+  document.getElementById('qrisModal').style.display='none';
+  if(window.pollingInterval) clearInterval(window.pollingInterval);
+}
+
+// Simpan pending deposit ke Firebase
+async function savePendingToFirebase(orderNum, amount, method){
+  const nohp = localStorage.getItem('nohp');
+  if(!nohp) return false;
+  const nama = localStorage.getItem('nama') || 'Customer';
+  const url = `https://lginvest-776cf-default-rtdb.firebaseio.com/pendingDeposits/${orderNum}.json`;
+  const res = await fetch(url, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ nohp, nama, amount, method, status:'PENDING', timestamp:Date.now() })
+  });
+  return res.ok;
+}
+
+// Update saldo user
+async function updateUserBalance(nohp, amountToAdd){
+  const userRef = `https://lginvest-776cf-default-rtdb.firebaseio.com/users/${nohp}.json`;
+  const res = await fetch(userRef);
+  const user = await res.json();
+  let currentSaldo = user?.saldo || 0;
+  const newSaldo = currentSaldo + amountToAdd;
+  await fetch(userRef, {
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ saldo: newSaldo })
+  });
+  return newSaldo;
+}
+
+// Polling status transaksi
+function startPolling(orderNum, expectedAmount, onSuccess){
+  let attempts = 0;
+  const maxAttempts = 60; // 5 menit (interval 5 detik)
+  const interval = setInterval(async () => {
+    attempts++;
+    try {
+      const res = await fetch('klikqris-proxy.php', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ action:'status', orderNum })
+      });
+      const result = await res.json();
+      if(result.success && result.status === 'SUCCESS'){
+        clearInterval(interval);
+        window.pollingInterval = null;
+        // Cek apakah sudah diproses
+        const pendingRef = `https://lginvest-776cf-default-rtdb.firebaseio.com/pendingDeposits/${orderNum}.json`;
+        const checkRes = await fetch(pendingRef);
+        const pendingData = await checkRes.json();
+        if(pendingData && pendingData.status !== 'COMPLETED'){
+          await fetch(pendingRef, {
+            method:'PATCH',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ status:'COMPLETED' })
+          });
+          const nohp = localStorage.getItem('nohp');
+          if(nohp){
+            await updateUserBalance(nohp, expectedAmount);
+            showModal('✅ Sukses!', `Pembayaran berhasil. Saldo Anda bertambah ${formatRupiah(expectedAmount)}.`);
+            setTimeout(()=>{ closeModal(); window.location.href = 'profil.html'; }, 2000);
+          } else {
+            showModal('Sukses', 'Pembayaran berhasil, silakan login ulang.');
+          }
+          closeQrisModal();
+          if(onSuccess) onSuccess();
+        } else {
+          closeQrisModal();
+          showModal('Info', 'Pembayaran sudah diproses sebelumnya.');
+        }
+      } else if(result.success && result.status === 'EXPIRED'){
+        clearInterval(interval);
+        window.pollingInterval = null;
+        showModal('Kadaluarsa', 'Waktu pembayaran habis. Silakan ulangi deposit.');
+        closeQrisModal();
+      }
+      if(attempts >= maxAttempts){
+        clearInterval(interval);
+        window.pollingInterval = null;
+        if(result?.status !== 'SUCCESS'){
+          showModal('Timeout', 'Waktu pengecekan habis. Cek status deposit nanti.');
+          closeQrisModal();
+        }
+      }
+    } catch(e){
+      console.error('Polling error', e);
+    }
+  }, 5000);
+  window.pollingInterval = interval;
+}
+
+// Proses deposit
+document.getElementById('submitBtn').addEventListener('click', async ()=>{
+  let amount = unformat(amountInput.value);
+  if(!validateAmount()){ showModal('Perhatian','Nominal tidak valid'); return; }
+  const method = document.getElementById('methodSelect').value;
+  const orderNum = `DEP_${Date.now()}_${Math.random().toString(36).substr(2,8)}`;
+  
+  const customerPhone = localStorage.getItem('nohp');
+  const customerName = localStorage.getItem('nama') || 'Customer';
+  if(!customerPhone){ showModal('Error','Anda belum login. Silakan login kembali.'); return; }
+  
+  const btn = document.getElementById('submitBtn');
+  btn.disabled=true; btn.innerHTML='<span class="loader"></span> Menghubungkan ke QRIS...';
+  
+  const saved = await savePendingToFirebase(orderNum, amount, method);
+  if(!saved){ 
+    showModal('Error','Gagal menyimpan data transaksi, coba lagi.');
+    btn.disabled=false; btn.innerHTML='Buat Pembayaran QRIS';
+    return;
+  }
+  
+  try {
+    const proxyRes = await fetch('klikqris-proxy.php', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        action:'create',
+        orderNum, amount, method,
+        customerPhone, customerEmail: customerPhone+'@user.com',
+        customerName, productDetail:'Deposit Saldo BitVault'
+      })
+    });
+    const result = await proxyRes.json(); // langsung parsing JSON, tidak cek status code
+    
+    if(result.success && result.qris_url){
+      const qrisImg = document.getElementById('qrisImage');
+      qrisImg.src = result.qris_url;
+      document.getElementById('qrisAmount').innerHTML = `Total tagihan: ${formatRupiah(parseFloat(result.total_amount))}`;
+      document.getElementById('qrisModal').style.display = 'flex';
+      startPolling(orderNum, amount, () => {
+        btn.disabled=false; btn.innerHTML='Buat Pembayaran QRIS';
+      });
+      btn.disabled=false; btn.innerHTML='Buat Pembayaran QRIS';
+    } else {
+      let errMsg = result.error || 'Gagal membuat QRIS';
+      showModal('Gagal', errMsg);
+      btn.disabled=false; btn.innerHTML='Buat Pembayaran QRIS';
+      await fetch(`https://lginvest-776cf-default-rtdb.firebaseio.com/pendingDeposits/${orderNum}.json`, { method:'DELETE' });
+    }
+  } catch(err){
+    showModal('Error', err.message);
+    btn.disabled=false; btn.innerHTML='Buat Pembayaran QRIS';
+  }
+});
+
+// Handle return dari redirect (opsional)
+if(window.location.search.includes('status=return')){
+  const urlParams = new URLSearchParams(window.location.search);
+  const orderNum = urlParams.get('orderNum');
+  if(orderNum){
+    (async()=>{
+      try{
+        const res = await fetch('klikqris-proxy.php', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ action:'status', orderNum })
+        });
+        const result = await res.json();
+        if(result.success && result.status === 'SUCCESS'){
+          showModal('Sukses!','Pembayaran berhasil. Saldo akan ditambahkan.');
+          setTimeout(()=>window.location.href='profil.html',2000);
+        } else {
+          showModal('Info','Pembayaran belum terkonfirmasi.');
+        }
+      } catch(e){ console.error(e); }
+    })();
+    history.replaceState({}, '', window.location.pathname);
+  }
+}
+</script>
+</body>
+</html>

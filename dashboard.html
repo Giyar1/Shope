@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Crypto Wealth • Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --gold: #F7931A;
+      --gold-light: #FFB347;
+      --gold-dark: #D9690F;
+      --bg-dark: #05070C;
+      --card-bg: #0E111A;
+      --card-border: rgba(247, 147, 26, 0.25);
+      --text-primary: #FFFFFF;
+      --text-secondary: #9CA3AF;
+      --success: #10B981;
+      --danger: #EF4444;
+      --gradient-gold: linear-gradient(135deg, #F7931A, #FDC830);
+      --glow-gold: 0 0 15px rgba(247,147,26,0.5);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      padding-bottom: 85px;
+      position: relative;
+    }
+
+    /* CRYPTO BACKGROUND */
+    .crypto-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 30% 10%, #0A0E17, #030509);
+    }
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(247,147,26,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,147,26,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+    .bitcoin-logo-bg {
+      position: fixed;
+      bottom: 10%;
+      right: -50px;
+      font-size: 280px;
+      opacity: 0.03;
+      z-index: -1;
+      pointer-events: none;
+      transform: rotate(15deg);
+    }
+    .glow-spot {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(247,147,26,0.15), transparent 70%);
+      border-radius: 50%;
+      top: -200px;
+      left: -200px;
+      z-index: -1;
+      filter: blur(60px);
+    }
+
+    /* Header Premium */
+    .crypto-header {
+      padding: 20px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btc-icon-badge {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, #1E232F, #0F111A);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--gold);
+      box-shadow: var(--glow-gold);
+    }
+    .btc-icon-badge i {
+      font-size: 28px;
+      color: var(--gold);
+    }
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo-text p {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Ticker Harga - Rapi */
+    .price-ticker {
+      background: rgba(0,0,0,0.5);
+      border-radius: 40px;
+      padding: 8px 18px;
+      border: 1px solid rgba(247,147,26,0.4);
+      text-align: center;
+      min-width: 160px;
+    }
+    .price-ticker .btc-price {
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--gold);
+      letter-spacing: -0.3px;
+      white-space: nowrap;
+    }
+    .price-ticker .btc-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+
+    /* Grafik Container */
+    .chart-container {
+      margin: 16px 18px;
+      background: rgba(14, 17, 26, 0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      padding: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .chart-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .chart-update {
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+    canvas#btcChart {
+      max-height: 200px;
+      width: 100%;
+    }
+
+    /* Balance Card */
+    .balance-gold {
+      background: linear-gradient(145deg, #0E111A, #080B12);
+      margin: 12px 18px 20px;
+      padding: 20px;
+      border-radius: 32px;
+      border: 1px solid rgba(247,147,26,0.4);
+      box-shadow: 0 15px 30px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .balance-left .label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+    }
+    .balance-amount {
+      font-size: 32px;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+    .balance-right i {
+      font-size: 52px;
+      color: var(--gold);
+      opacity: 0.7;
+    }
+
+    /* Menu Grid */
+    .menu-grid-crypto {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 0 18px 28px;
+    }
+    .menu-card-crypto {
+      background: rgba(14, 17, 26, 0.8);
+      backdrop-filter: blur(8px);
+      border-radius: 24px;
+      padding: 14px 6px;
+      text-align: center;
+      border: 1px solid rgba(247,147,26,0.2);
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+    .menu-card-crypto:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold);
+      background: #13182A;
+      box-shadow: 0 10px 20px -5px rgba(247,147,26,0.3);
+    }
+    .menu-icon-wrap {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(145deg, #1A1F2C, #0C0F18);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      border: 1px solid rgba(247,147,26,0.3);
+    }
+    .menu-icon-wrap i {
+      font-size: 26px;
+      color: var(--gold);
+    }
+    .menu-label-crypto {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Products */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 18px 18px;
+    }
+    .section-title i {
+      color: var(--gold);
+      font-size: 22px;
+    }
+    .section-title h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .products-crypto {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 16px;
+      margin: 0 18px;
+    }
+    .product-crypto-card {
+      background: linear-gradient(145deg, #0F121C, #0A0D14);
+      border-radius: 28px;
+      padding: 16px;
+      border: 1px solid rgba(247,147,26,0.2);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .product-crypto-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="75" font-size="70" text-anchor="middle" fill="%23F7931A" opacity="0.12" font-family="Arial">₿</text></svg>');
+      background-repeat: no-repeat;
+      background-position: bottom right;
+      background-size: 100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .product-crypto-card > * {
+      position: relative;
+      z-index: 2;
+    }
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--gradient-gold);
+      color: #0A0B10;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 30px;
+      z-index: 3;
+    }
+    .product-icon {
+      width: 70px;
+      height: 70px;
+      background: #121724;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      border: 1px solid var(--card-border);
+    }
+    .product-icon i {
+      font-size: 38px;
+      color: var(--gold);
+    }
+    .product-name {
+      font-weight: 800;
+      font-size: 17px;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .product-price {
+      font-weight: 700;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .product-stats {
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      color: var(--text-secondary);
+    }
+    .stat-value {
+      font-weight: 700;
+      color: #FDC830;
+    }
+    .buy-btn-crypto {
+      width: 100%;
+      background: var(--gradient-gold);
+      border: none;
+      border-radius: 40px;
+      padding: 12px;
+      font-weight: 800;
+      color: #0A0B10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 8px;
+    }
+    .buy-btn-crypto:active { transform: scale(0.96); }
+
+    /* Bottom Navigation - Premium Crypto Style */
+    .bottom-nav-premium {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8, 11, 18, 0.96);
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 12px 22px;
+      border-top: 1px solid rgba(247,147,26,0.4);
+      z-index: 100;
+    }
+    .nav-premium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: 0.2s;
+      gap: 4px;
+    }
+    .nav-premium-item i {
+      font-size: 24px;
+    }
+    .nav-premium-item span {
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .nav-premium-item.active {
+      color: var(--gold);
+      text-shadow: 0 0 8px rgba(247,147,26,0.6);
+    }
+    /* Ikon khusus crypto untuk Investasi & Undang */
+    .nav-premium-item .fa-chart-line, 
+    .nav-premium-item .fa-share-alt {
+      filter: drop-shadow(0 0 2px rgba(247,147,26,0.5));
+    }
+
+    /* Modal */
+    .modal-crypto {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-card {
+      background: #0F121C;
+      border-radius: 48px;
+      max-width: 360px;
+      width: 100%;
+      padding: 28px 24px;
+      text-align: center;
+      border: 1px solid var(--gold);
+      box-shadow: 0 30px 40px black;
+    }
+    .modal-card .modal-icon {
+      font-size: 52px;
+      margin-bottom: 12px;
+    }
+    .modal-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .modal-text {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .modal-btn-gold {
+      background: var(--gradient-gold);
+      border: none;
+      border-radius: 60px;
+      padding: 14px;
+      width: 100%;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .modal-btn-cancel {
+      background: #262C3A;
+      color: white;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .products-crypto { grid-template-columns: 1fr; gap: 14px; }
+      .menu-grid-crypto { gap: 8px; }
+      .balance-amount { font-size: 24px; }
+      .chart-container { padding: 12px; }
+      .price-ticker .btc-price { font-size: 14px; white-space: normal; word-break: break-all; }
+      .price-ticker { min-width: 130px; padding: 6px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="crypto-bg"></div>
+<div class="grid-overlay"></div>
+<div class="bitcoin-logo-bg"><i class="fab fa-bitcoin"></i></div>
+<div class="glow-spot"></div>
+
+<header class="crypto-header">
+  <div class="logo-area">
+    <div class="btc-icon-badge"><i class="fab fa-bitcoin"></i></div>
+    <div class="logo-text">
+      <h1>CRYPTO WEALTH</h1>
+      <p><i class="fas fa-shield-alt"></i> Aset Digital · Profit Harian</p>
+    </div>
+  </div>
+  <div class="price-ticker" id="btcTicker">
+    <div class="btc-price">Rp 0</div>
+    <div class="btc-label">BTC/IDR</div>
+  </div>
+</header>
+
+<!-- Grafik Harga Bitcoin -->
+<div class="chart-container">
+  <div class="chart-header">
+    <h3><i class="fab fa-bitcoin" style="color: var(--gold);"></i> Harga Bitcoin (7 Hari Terakhir)</h3>
+    <div class="chart-update" id="updateTime">Memuat...</div>
+  </div>
+  <canvas id="btcChart" width="400" height="200"></canvas>
+</div>
+
+<div class="balance-gold">
+  <div class="balance-left">
+    <div class="label">Total Portfolio (IDR)</div>
+    <div class="balance-amount" id="saldoTotal">Rp 0</div>
+  </div>
+  <div class="balance-right">
+    <i class="fab fa-bitcoin"></i>
+  </div>
+</div>
+
+<!-- Menu Ikon -->
+<div class="menu-grid-crypto">
+  <div class="menu-card-crypto" onclick="goPage('deposit.html')">
+    <div class="menu-icon-wrap"><i class="fas fa-wallet"></i></div>
+    <div class="menu-label-crypto">Deposit</div>
+  </div>
+  <div class="menu-card-crypto" onclick="goPage('tarik.html')">
+    <div class="menu-icon-wrap"><i class="fas fa-money-bill-wave"></i></div>
+    <div class="menu-label-crypto">Tarik</div>
+  </div>
+  <div class="menu-card-crypto" onclick="goPage('tim.html')">
+    <div class="menu-icon-wrap"><i class="fas fa-users"></i></div>
+    <div class="menu-label-crypto">Tim Saya</div>
+  </div>
+  <div class="menu-card-crypto" onclick="goPage('online.html')">
+    <div class="menu-icon-wrap"><i class="fas fa-globe"></i></div>
+    <div class="menu-label-crypto">Exchange</div>
+  </div>
+</div>
+
+<div class="section-title">
+  <i class="fas fa-rocket"></i>
+  <h2>Paket Bitcoin Mining</h2>
+</div>
+<div class="products-crypto" id="produkGrid"></div>
+
+<nav class="bottom-nav-premium">
+  <a href="dashboard.html" class="nav-premium-item active"><i class="fas fa-home"></i><span>Beranda</span></a>
+  <a href="investasi.html" class="nav-premium-item"><i class="fas fa-chart-line"></i><span>Investasi</span></a>
+  <a href="undang.html" class="nav-premium-item"><i class="fas fa-share-alt"></i><span>Undang</span></a>
+  <a href="profil.html" class="nav-premium-item"><i class="fas fa-user-astronaut"></i><span>Profil</span></a>
+</nav>
+
+<!-- Modal Global -->
+<div class="modal-crypto" id="globalModal">
+  <div class="modal-card">
+    <div class="modal-icon" id="modalIcon"><i class="fas fa-check-circle" style="color: #F7931A;"></i></div>
+    <div class="modal-title" id="modalTitle">Sukses</div>
+    <div class="modal-text" id="modalMessage"></div>
+    <button class="modal-btn-gold" id="modalCloseBtn">Oke</button>
+  </div>
+</div>
+
+<div class="modal-crypto" id="confirmModal">
+  <div class="modal-card">
+    <div class="modal-icon"><i class="fas fa-question-circle" style="color: #F7931A;"></i></div>
+    <div class="modal-title">Konfirmasi</div>
+    <div class="modal-text" id="confirmMessage"></div>
+    <button class="modal-btn-gold" id="confirmYes">Ya, Beli</button>
+    <button class="modal-btn-gold modal-btn-cancel" id="confirmNo">Batal</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, get, update, set, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // ======================= 10 PRODUK BITCOIN =======================
+  const produkList = [
+    { kode: 'BTC1', harga: 100000, persentase: 20.0, masaAktif: 95, nama: 'Bitcoin Genesis', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC2', harga: 250000, persentase: 21.0, masaAktif: 95, nama: 'Bitcoin Quantum', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC3', harga: 350000, persentase: 22.0, masaAktif: 95, nama: 'Bitcoin Halving', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC4', harga: 500000, persentase: 23.0, masaAktif: 95, nama: 'Bitcoin Max', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC5', harga: 750000, persentase: 24.0, masaAktif: 95, nama: 'Bitcoin Elite', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC6', harga: 845000, persentase: 24.5, masaAktif: 95, nama: 'Bitcoin Prime', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC7', harga: 970000, persentase: 24.8, masaAktif: 95, nama: 'Bitcoin Infinite', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC8', harga: 1100000, persentase: 25.0, masaAktif: 95, nama: 'Bitcoin Vault', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC9', harga: 1250000, persentase: 25.5, masaAktif: 95, nama: 'Bitcoin Legacy', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC10', harga: 1500000, persentase: 26.0, masaAktif: 95, nama: 'Bitcoin Ultimate', icon: 'fab fa-bitcoin' }
+  ];
+
+  function formatRupiah(n) { 
+    if (n === undefined || n === null) n = 0;
+    return 'Rp ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); 
+  }
+  function hitungProfitPerhari(harga, persen) { return Math.round(harga * (persen / 100)); }
+
+  function renderProducts() {
+    const grid = document.getElementById('produkGrid');
+    grid.innerHTML = '';
+    produkList.forEach(prod => {
+      const profitHarian = hitungProfitPerhari(prod.harga, prod.persentase);
+      const totalProfit = profitHarian * prod.masaAktif;
+      const card = document.createElement('div');
+      card.className = 'product-crypto-card';
+      // Background Bitcoin samar sudah diatur via CSS ::before
+      card.innerHTML = `
+        <div class="product-badge">${prod.persentase}% /hari</div>
+        <div class="product-icon"><i class="${prod.icon}"></i></div>
+        <div class="product-name">${prod.nama}</div>
+        <div class="product-price">${formatRupiah(prod.harga)}</div>
+        <div class="product-stats">
+          <div class="stat-row"><span class="stat-label">Profit harian:</span><span class="stat-value">${formatRupiah(profitHarian)}</span></div>
+          <div class="stat-row"><span class="stat-label">Masa aktif:</span><span class="stat-value">${prod.masaAktif} hari</span></div>
+          <div class="stat-row"><span class="stat-label">Total:</span><span class="stat-value">${formatRupiah(totalProfit)}</span></div>
+        </div>
+        <button class="buy-btn-crypto" data-kode="${prod.kode}" data-harga="${prod.harga}" data-nama="${prod.nama}"><i class="fas fa-shopping-cart"></i> Beli Paket</button>
+      `;
+      grid.appendChild(card);
+    });
+    document.querySelectorAll('.buy-btn-crypto').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const kode = btn.dataset.kode;
+        const harga = parseInt(btn.dataset.harga);
+        const nama = btn.dataset.nama;
+        confirmPurchase(kode, harga, nama);
+      });
+    });
+  }
+
+  let pendingPurchase = null;
+  function confirmPurchase(kode, harga, nama) {
+    pendingPurchase = { kode, harga, nama };
+    document.getElementById('confirmMessage').innerHTML = `Yakin membeli <strong>${nama}</strong> seharga ${formatRupiah(harga)}? Profit akan dikirim otomatis setiap 24 jam.`;
+    document.getElementById('confirmModal').style.display = 'flex';
+  }
+  document.getElementById('confirmYes').onclick = async () => {
+    document.getElementById('confirmModal').style.display = 'none';
+    if (pendingPurchase) await processBuy(pendingPurchase.kode, pendingPurchase.harga, pendingPurchase.nama);
+    pendingPurchase = null;
+  };
+  document.getElementById('confirmNo').onclick = () => {
+    document.getElementById('confirmModal').style.display = 'none';
+    pendingPurchase = null;
+  };
+
+  async function processBuy(kode, harga, nama) {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) { showModal('Error', 'Harap login terlebih dahulu', 'error'); return; }
+    const btn = document.querySelector(`.buy-btn-crypto[data-kode="${kode}"]`);
+    const originalHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Processing...';
+    btn.disabled = true;
+    try {
+      const userSnap = await get(ref(db, 'users/' + nohp));
+      if (!userSnap.exists()) throw new Error('User tidak ditemukan');
+      const user = userSnap.val();
+      if ((user.saldo || 0) < harga) throw new Error('Saldo tidak cukup');
+      const produk = produkList.find(p => p.kode === kode);
+      const profitPerHari = hitungProfitPerhari(harga, produk.persentase);
+      const now = new Date();
+      const updates = {};
+      updates[`/users/${nohp}/saldo`] = (user.saldo - harga);
+      updates[`/purchases/${nohp}/${kode}`] = {
+        tanggal: now.toISOString(), harga, nama, status: 'active',
+        profit_perhari: profitPerHari, masa_aktif: produk.masaAktif,
+        sisa_hari: produk.masaAktif, total_profit_diambil: 0,
+        last_profit_date: now.toISOString()
+      };
+      const existing = await get(ref(db, `purchases/${nohp}/${kode}`));
+      const isFirst = !existing.exists();
+      if (isFirst && user.upline) {
+        const upline1Ref = ref(db, 'users/' + user.upline);
+        const upline1Snap = await get(upline1Ref);
+        if (upline1Snap.exists()) {
+          const upline1 = upline1Snap.val();
+          const komisi1 = Math.round(harga * 0.25);
+          updates[`/users/${user.upline}/saldo`] = (upline1.saldo || 0) + komisi1;
+          updates[`/commissions/${user.upline}/c_${Date.now()}_1`] = { dari: nohp, paket: kode, jumlah: komisi1, level: 1, tanggal: now.toISOString() };
+          if (upline1.upline) {
+            const upline2Snap = await get(ref(db, 'users/' + upline1.upline));
+            if (upline2Snap.exists()) {
+              const upline2 = upline2Snap.val();
+              const komisi2 = Math.round(harga * 0.02);
+              updates[`/users/${upline1.upline}/saldo`] = (upline2.saldo || 0) + komisi2;
+              updates[`/commissions/${upline1.upline}/c_${Date.now()}_2`] = { dari: nohp, paket: kode, jumlah: komisi2, level: 2, tanggal: now.toISOString() };
+              if (upline2.upline) {
+                const upline3Snap = await get(ref(db, 'users/' + upline2.upline));
+                if (upline3Snap.exists()) {
+                  const upline3 = upline3Snap.val();
+                  const komisi3 = Math.round(harga * 0.01);
+                  updates[`/users/${upline2.upline}/saldo`] = (upline3.saldo || 0) + komisi3;
+                  updates[`/commissions/${upline2.upline}/c_${Date.now()}_3`] = { dari: nohp, paket: kode, jumlah: komisi3, level: 3, tanggal: now.toISOString() };
+                }
+              }
+            }
+          }
+        }
+      }
+      await update(ref(db), updates);
+      showModal('Sukses!', `Paket ${nama} berhasil dibeli. Profit harian ${formatRupiah(profitPerHari)} akan dikirim otomatis setiap 24 jam.`, 'success');
+      setTimeout(() => window.location.reload(), 2000);
+    } catch (err) {
+      showModal('Gagal', err.message, 'error');
+    } finally {
+      btn.innerHTML = originalHtml;
+      btn.disabled = false;
+    }
+  }
+
+  function loadBalance() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) return;
+    const userRef = ref(db, 'users/' + nohp);
+    onValue(userRef, (snap) => {
+      if (snap.exists()) document.getElementById('saldoTotal').innerText = formatRupiah(snap.val().saldo || 0);
+      else document.getElementById('saldoTotal').innerText = formatRupiah(0);
+    });
+  }
+
+  async function distributeProfits() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) return;
+    const purchasesSnap = await get(ref(db, 'purchases/' + nohp));
+    if (!purchasesSnap.exists()) return;
+    const purchases = purchasesSnap.val();
+    const updates = {};
+    const now = Date.now();
+    for (const [kode, purchase] of Object.entries(purchases)) {
+      if (purchase.status !== 'active') continue;
+      const lastTime = purchase.last_profit_date ? new Date(purchase.last_profit_date).getTime() : new Date(purchase.tanggal).getTime();
+      const diffHours = (now - lastTime) / (1000 * 3600);
+      if (diffHours >= 24 && purchase.sisa_hari > 0) {
+        const days = Math.min(Math.floor(diffHours / 24), purchase.sisa_hari);
+        const totalProfit = purchase.profit_perhari * days;
+        const newSisa = purchase.sisa_hari - days;
+        const newLast = new Date(lastTime + (days * 24 * 3600 * 1000)).toISOString();
+        const currentSaldo = (await get(ref(db, 'users/' + nohp + '/saldo'))).val() || 0;
+        updates[`/users/${nohp}/saldo`] = currentSaldo + totalProfit;
+        updates[`/purchases/${nohp}/${kode}/sisa_hari`] = newSisa;
+        updates[`/purchases/${nohp}/${kode}/last_profit_date`] = newLast;
+        updates[`/purchases/${nohp}/${kode}/total_profit_diambil`] = (purchase.total_profit_diambil || 0) + totalProfit;
+        if (newSisa <= 0) updates[`/purchases/${nohp}/${kode}/status`] = 'completed';
+      }
+    }
+    if (Object.keys(updates).length) await update(ref(db), updates);
+  }
+
+  function showModal(title, msg, type = 'success') {
+    const modal = document.getElementById('globalModal');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerHTML = msg;
+    const iconDiv = document.getElementById('modalIcon');
+    if (type === 'success') iconDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #F7931A; font-size: 52px;"></i>';
+    else iconDiv.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #EF4444; font-size: 52px;"></i>';
+    modal.style.display = 'flex';
+    document.getElementById('modalCloseBtn').onclick = () => modal.style.display = 'none';
+  }
+
+  window.goPage = (page) => { window.location.href = page; };
+
+  // GRAFIK & HARGA BTC REAL-TIME
+  let btcChart = null;
+  async function fetchBitcoinData() {
+    try {
+      const response = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=idr&days=7&interval=daily');
+      const data = await response.json();
+      const prices = data.prices;
+      const labels = [];
+      const priceValues = [];
+      for (let i = 0; i < prices.length; i++) {
+        const date = new Date(prices[i][0]);
+        labels.push(date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
+        priceValues.push(prices[i][1]);
+      }
+      const latestPrice = priceValues[priceValues.length - 1];
+      document.getElementById('btcTicker').innerHTML = `<div class="btc-price">${formatRupiah(Math.round(latestPrice))}</div><div class="btc-label">BTC/IDR</div>`;
+      document.getElementById('updateTime').innerHTML = `Update: ${new Date().toLocaleTimeString()}`;
+      
+      if (btcChart) btcChart.destroy();
+      const ctx = document.getElementById('btcChart').getContext('2d');
+      btcChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Harga BTC (IDR)',
+            data: priceValues,
+            borderColor: '#F7931A',
+            backgroundColor: 'rgba(247, 147, 26, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: '#F7931A',
+            pointBorderColor: '#fff',
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            tooltip: { callbacks: { label: (ctx) => `Rp ${ctx.raw.toLocaleString()}` } },
+            legend: { labels: { color: '#9CA3AF' } }
+          },
+          scales: {
+            y: { ticks: { color: '#9CA3AF', callback: (val) => 'Rp ' + val.toLocaleString() }, grid: { color: 'rgba(247,147,26,0.1)' } },
+            x: { ticks: { color: '#9CA3AF' }, grid: { display: false } }
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Gagal fetch harga BTC:', error);
+      document.getElementById('btcTicker').innerHTML = `<div class="btc-price">Rp 0</div><div class="btc-label">BTC/IDR</div>`;
+    }
+  }
+
+  (async () => {
+    if (!localStorage.getItem('nohp')) {
+      showModal('Akses Ditolak', 'Anda harus login terlebih dahulu', 'error');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    renderProducts();
+    loadBalance();
+    await distributeProfits();
+    setInterval(() => distributeProfits(), 30 * 60 * 1000);
+    await fetchBitcoinData();
+    setInterval(fetchBitcoinData, 5 * 60 * 1000);
+  })();
+</script>
+</body>
+</html>

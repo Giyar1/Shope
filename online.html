@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Belkin Power - Grup Komunitas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --primary: #007AFF;
+      --primary-light: #5AC8FA;
+      --secondary: #00C7BE;
+      --accent: #FF9500;
+      --success: #34C759;
+      --bg: #0A0F1C;
+      --card: #1C1C1E;
+      --card-light: #2C2C2E;
+      --text: #FFFFFF;
+      --text-muted: #8E8E93;
+      --border: #38383A;
+      --gold: #FFD700;
+      --purple: #BF5AF2;
+      --whatsapp: #25D366;
+      --whatsapp-light: #75E0A7;
+      --gradient-primary: linear-gradient(135deg, #007AFF, #5AC8FA);
+      --gradient-secondary: linear-gradient(135deg, #00C7BE, #64D2FF);
+      --gradient-accent: linear-gradient(135deg, #FF9500, #FFCC00);
+      --gradient-success: linear-gradient(135deg, #34C759, #64D2FF);
+      --gradient-gold: linear-gradient(135deg, #FFD700, #FF9500);
+      --gradient-purple: linear-gradient(135deg, #BF5AF2, #AC8EF9);
+      --gradient-whatsapp: linear-gradient(135deg, var(--whatsapp), var(--whatsapp-light));
+      --gradient-dark: linear-gradient(135deg, #1C1C1E, #2C2C2E);
+      --gradient-belkin: linear-gradient(135deg, #0A0F1C, #1C2738);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+      --shadow-belkin: 0 10px 30px rgba(0,0,0,0.7);
+      --shadow-glow: 0 0 20px rgba(0, 122, 255, 0.3);
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 15px;
+      padding-bottom: 80px;
+    }
+    
+    /* Premium Background Animation */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(40px);
+      animation: float 20s infinite linear;
+    }
+    
+    .bg-circle:nth-child(1) {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      left: 5%;
+      background: radial-gradient(circle, rgba(0, 122, 255, 0.1) 0%, rgba(0, 122, 255, 0) 70%);
+      animation-delay: 0s;
+    }
+    
+    .bg-circle:nth-child(2) {
+      width: 400px;
+      height: 400px;
+      top: 60%;
+      left: 80%;
+      background: radial-gradient(circle, rgba(0, 199, 190, 0.1) 0%, rgba(0, 199, 190, 0) 70%);
+      animation-delay: -5s;
+    }
+    
+    .bg-circle:nth-child(3) {
+      width: 250px;
+      height: 250px;
+      top: 30%;
+      left: 70%;
+      background: radial-gradient(circle, rgba(255, 149, 0, 0.1) 0%, rgba(255, 149, 0, 0) 70%);
+      animation-delay: -10s;
+    }
+    
+    .bg-circle:nth-child(4) {
+      width: 350px;
+      height: 350px;
+      top: 70%;
+      left: 10%;
+      background: radial-gradient(circle, rgba(37, 211, 102, 0.1) 0%, rgba(37, 211, 102, 0) 70%);
+      animation-delay: -15s;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20px, 20px) rotate(90deg);
+      }
+      50% {
+        transform: translate(0, 40px) rotate(180deg);
+      }
+      75% {
+        transform: translate(-20px, 20px) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
+    }
+    
+    /* Premium Header */
+    header {
+      background: var(--gradient-belkin);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: var(--gradient-whatsapp);
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.1;
+      z-index: 0;
+    }
+    
+    .header-top {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .back-button {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      margin-right: 16px;
+    }
+    
+    .back-button:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateX(-2px);
+    }
+    
+    .back-button i {
+      font-size: 18px;
+      color: white;
+    }
+    
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #5AC8FA, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+    
+    main {
+      padding: 20px 16px;
+      max-width: 500px;
+      margin: auto;
+      padding-bottom: 40px;
+    }
+    
+    /* Premium Contact Cards */
+    .contact-section {
+      margin-bottom: 30px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.3px;
+      position: relative;
+      padding-left: 14px;
+    }
+    
+    .section-title::before {
+      content: '';
+      display: block;
+      width: 4px;
+      height: 20px;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+      position: absolute;
+      left: 0;
+    }
+    
+    .contact-card {
+      background: var(--gradient-belkin);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: var(--shadow-belkin);
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+    
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-whatsapp);
+    }
+    
+    .contact-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+    
+    .contact-card:hover::after {
+      left: 100%;
+    }
+    
+    .contact-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .contact-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      background: var(--gradient-whatsapp);
+      color: white;
+      font-size: 28px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .contact-icon::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .contact-card:hover .contact-icon::before {
+      opacity: 1;
+    }
+    
+    .contact-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    
+    .contact-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    
+    .contact-description {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    
+    .contact-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(37, 211, 102, 0.1);
+      border: 1px solid rgba(37, 211, 102, 0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .contact-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .contact-link:hover {
+      background: rgba(37, 211, 102, 0.2);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .contact-link:hover::before {
+      left: 100%;
+    }
+    
+    .link-text {
+      flex: 1;
+    }
+    
+    .link-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .link-url {
+      font-size: 13px;
+      color: var(--text-muted);
+      word-break: break-all;
+    }
+    
+    .link-icon {
+      color: var(--whatsapp);
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+    
+    .contact-link:hover .link-icon {
+      transform: translateX(3px);
+    }
+    
+    .contact-button {
+      width: 100%;
+      padding: 16px;
+      background: var(--gradient-whatsapp);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-belkin);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .contact-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .contact-button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg), 0 0 20px rgba(37, 211, 102, 0.3);
+    }
+    
+    .contact-button:hover::before {
+      left: 100%;
+    }
+    
+    /* Premium Info Card */
+    .info-card {
+      background: var(--gradient-belkin);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow-belkin);
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-top: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-success);
+    }
+    
+    .info-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .info-title i {
+      color: var(--success);
+    }
+    
+    .info-list {
+      list-style: none;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      padding: 4px;
+      border-radius: 6px;
+    }
+    
+    .info-item:hover {
+      background: rgba(255,255,255,0.05);
+      transform: translateX(5px);
+    }
+    
+    .info-item i {
+      color: var(--primary);
+      margin-top: 2px;
+      font-size: 11px;
+    }
+    
+    /* Floating Action Buttons */
+    .floating-actions {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 100;
+    }
+    
+    .floating-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--gradient-whatsapp);
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .floating-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .floating-btn:hover {
+      transform: scale(1.1);
+      box-shadow: var(--shadow-lg), 0 0 20px rgba(37, 211, 102, 0.3);
+    }
+    
+    .floating-btn:hover::before {
+      opacity: 1;
+    }
+    
+    /* Bottom Navigation */
+    nav.bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--gradient-belkin);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      box-shadow: 0 -4px 15px rgba(0,0,0,0.5);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    nav.bottom .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      padding: 6px 10px;
+      border-radius: 12px;
+      position: relative;
+      flex: 1;
+      max-width: 70px;
+    }
+    
+    nav.bottom .nav-item.active {
+      color: var(--primary);
+      background: rgba(0,122,255,0.15);
+    }
+    
+    nav.bottom .nav-item.active .nav-icon {
+      transform: scale(1.1);
+      color: var(--primary);
+    }
+    
+    nav.bottom .nav-item.active .nav-label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+    
+    .nav-icon {
+      font-size: 20px;
+      margin-bottom: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 380px) {
+      .contact-card {
+        padding: 20px;
+      }
+      
+      .contact-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+      
+      .contact-title {
+        font-size: 18px;
+      }
+      
+      .floating-actions {
+        bottom: 70px;
+        right: 15px;
+      }
+      
+      .floating-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+      
+      .header-title {
+        font-size: 18px;
+      }
+      
+      .header-subtitle {
+        font-size: 13px;
+      }
+    }
+    
+    @media (max-width: 340px) {
+      .contact-card {
+        padding: 16px;
+      }
+      
+      .contact-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+      
+      .contact-icon {
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-animation">
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+    <div class="bg-circle"></div>
+  </div>
+
+  <header>
+    <div class="header-top">
+      <button class="back-button" onclick="goPage('profil.html')">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h1 class="header-title">Komunitas</h1>
+    </div>
+    <div class="header-subtitle">Bergabung dengan komunitas resmi Belkin Power</div>
+  </header>
+  
+  <main>
+    <div class="contact-section">
+      <h2 class="section-title">Grup Komunitas</h2>
+      
+      <div class="contact-card">
+        <div class="contact-header">
+          <div class="contact-icon">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div>
+            <div class="contact-title">Grup Komunitas Resmi</div>
+            <div class="contact-subtitle">Belkin Power Community</div>
+          </div>
+        </div>
+        
+        <p class="contact-description">
+          Bergabunglah dengan grup komunitas resmi investor Belkin Power. Diskusikan strategi investasi, berbagi pengalaman, dapatkan update terbaru, dan terhubung dengan sesama investor.
+        </p>
+        
+        <a href="https://chat.whatsapp.com/J9UJLS4yrqKBvOjwWdLJUR?mode=gi_t" class="contact-link" target="_blank">
+          <div class="link-text">
+            <div class="link-title">Grup WhatsApp Resmi</div>
+            <div class="link-url">https://chat.whatsapp.com/J9UJLS4yrqKBvOjwWdLJUR?mode=gi_t</div>
+          </div>
+          <div class="link-icon">
+            <i class="fas fa-external-link-alt"></i>
+          </div>
+        </a>
+        
+        <button class="contact-button" onclick="openLink('https://chat.whatsapp.com/J9UJLS4yrqKBvOjwWdLJUR?mode=gi_t')">
+          <i class="fab fa-whatsapp"></i>
+          Bergabung ke Grup WhatsApp
+        </button>
+      </div>
+    </div>
+    
+    <div class="info-card">
+      <h3 class="info-title">
+        <i class="fas fa-shield-alt"></i>
+        Informasi Penting
+      </h3>
+      <ul class="info-list">
+        <li class="info-item">
+          <i class="fas fa-check-circle"></i>
+          <span>Grup komunitas resmi untuk investor Belkin Power</span>
+        </li>
+        <li class="info-item">
+          <i class="fas fa-check-circle"></i>
+          <span>Tempat berbagi informasi dan pengalaman investasi</span>
+        </li>
+        <li class="info-item">
+          <i class="fas fa-check-circle"></i>
+          <span>Update terbaru seputar produk dan layanan Belkin Power</span>
+        </li>
+        <li class="info-item">
+          <i class="fas fa-check-circle"></i>
+          <span>Diskusi strategi investasi yang sehat dan konstruktif</span>
+        </li>
+        <li class="info-item">
+          <i class="fas fa-check-circle"></i>
+          <span>Jaga kerahasiaan informasi pribadi Anda</span>
+        </li>
+      </ul>
+    </div>
+  </main>
+  
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <button class="floating-btn" onclick="openLink('https://chat.whatsapp.com/J9UJLS4yrqKBvOjwWdLJUR?mode=gi_t')" title="Bergabung Grup">
+      <i class="fab fa-whatsapp"></i>
+    </button>
+  </div>
+  
+  <!-- Bottom Navigation -->
+  <nav class="bottom">
+    <a href="dashboard.html" class="nav-item">
+      <i class="fas fa-home nav-icon"></i>
+      <span class="nav-label">Beranda</span>
+    </a>
+    <a href="investasi.html" class="nav-item">
+      <i class="fas fa-chart-line nav-icon"></i>
+      <span class="nav-label">Investasi</span>
+    </a>
+    <a href="undang.html" class="nav-item">
+      <i class="fas fa-share-alt nav-icon"></i>
+      <span class="nav-label">Undang</span>
+    </a>
+    <a href="profil.html" class="nav-item">
+      <i class="fas fa-user nav-icon"></i>
+      <span class="nav-label">Profil</span>
+    </a>
+  </nav>
+  
+  <script>
+    // Fungsi untuk membuka tautan
+    function openLink(url) {
+      window.open(url, '_blank');
+    }
+    
+    // Fungsi navigasi
+    function goPage(page) {
+      window.location.href = page;
+    }
+    
+    // Tambahkan efek ketikan pada header subtitle
+    document.addEventListener('DOMContentLoaded', function() {
+      const subtitle = document.querySelector('.header-subtitle');
+      const originalText = subtitle.textContent;
+      subtitle.textContent = '';
+      
+      let i = 0;
+      const typeWriter = () => {
+        if (i < originalText.length) {
+          subtitle.textContent += originalText.charAt(i);
+          i++;
+          setTimeout(typeWriter, 50);
+        }
+      };
+      
+      // Mulai efek ketikan setelah 500ms
+      setTimeout(typeWriter, 500);
+      
+      // Tambahkan event listener untuk semua link
+      const links = document.querySelectorAll('.contact-link');
+      links.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.open(this.href, '_blank');
+        });
+      });
+      
+      // Tambahkan efek scroll halus
+      const cards = document.querySelectorAll('.contact-card');
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+      
+      cards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+      });
+      
+      // Set active navigation
+      const currentPage = window.location.pathname.split('/').pop();
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        const href = item.getAttribute('href');
+        if (href === currentPage) {
+          item.classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

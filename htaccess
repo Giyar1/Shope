@@ -1,0 +1,4 @@
+<Files "merchant_private.key">
+    Order Allow,Deny
+    Deny from all
+</Files>

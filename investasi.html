@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Crypto Wealth • Investasi Saya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --gold: #F7931A;
+      --gold-light: #FFB347;
+      --gold-dark: #D9690F;
+      --bg-dark: #05070C;
+      --card-bg: #0E111A;
+      --card-border: rgba(247, 147, 26, 0.25);
+      --text-primary: #FFFFFF;
+      --text-secondary: #9CA3AF;
+      --success: #10B981;
+      --danger: #EF4444;
+      --gradient-gold: linear-gradient(135deg, #F7931A, #FDC830);
+      --glow-gold: 0 0 15px rgba(247,147,26,0.5);
+      --shadow-premium: 0 20px 35px -12px rgba(0,0,0,0.6);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      padding-bottom: 85px;
+      position: relative;
+    }
+
+    /* CRYPTO BACKGROUND */
+    .crypto-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 30% 10%, #0A0E17, #030509);
+    }
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(247,147,26,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,147,26,0.05) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+    .bitcoin-logo-bg {
+      position: fixed;
+      bottom: 10%;
+      right: -50px;
+      font-size: 280px;
+      opacity: 0.03;
+      z-index: -1;
+      pointer-events: none;
+      transform: rotate(15deg);
+    }
+    .glow-spot {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(247,147,26,0.15), transparent 70%);
+      border-radius: 50%;
+      top: -200px;
+      left: -200px;
+      z-index: -1;
+      filter: blur(60px);
+    }
+
+    /* Header Premium */
+    .crypto-header {
+      padding: 20px 18px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--card-border);
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btc-icon-badge {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, #1E232F, #0F111A);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--gold);
+      box-shadow: var(--glow-gold);
+    }
+    .btc-icon-badge i {
+      font-size: 28px;
+      color: var(--gold);
+    }
+    .logo-text h1 {
+      font-size: 24px;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo-text p {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Main */
+    main {
+      padding: 20px 18px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Stat Card */
+    .stats-container {
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: linear-gradient(145deg, #0E111A, #080B12);
+      border-radius: 32px;
+      padding: 22px 20px;
+      border: 1px solid rgba(247,147,26,0.4);
+      box-shadow: var(--shadow-premium);
+    }
+    .stat-card .label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .stat-card .value {
+      font-size: 34px;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    /* Section Title */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .section-title i {
+      color: var(--gold);
+      font-size: 22px;
+    }
+    .section-title h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* Investasi List */
+    .investasi-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .investasi-item {
+      background: linear-gradient(145deg, #0F121C, #0A0D14);
+      border-radius: 28px;
+      padding: 20px;
+      border: 1px solid rgba(247,147,26,0.2);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .investasi-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 30px -10px black;
+    }
+    .investasi-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-gold);
+    }
+    .investasi-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .investasi-logo {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(145deg, #1A1F2C, #0C0F18);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(247,147,26,0.3);
+    }
+    .investasi-logo i {
+      font-size: 30px;
+      color: var(--gold);
+    }
+    .investasi-info {
+      flex: 1;
+    }
+    .investasi-name {
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+    .investasi-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-active {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-completed {
+      background: rgba(156, 163, 175, 0.15);
+      color: #9CA3AF;
+      border: 1px solid rgba(156, 163, 175, 0.3);
+    }
+    .investasi-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .detail-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .detail-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .timeline {
+      background: rgba(0,0,0,0.3);
+      border-radius: 20px;
+      padding: 12px 16px;
+      margin-top: 8px;
+    }
+    .timeline-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .timeline-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+    .timeline-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .timeline-value {
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: rgba(14, 17, 26, 0.6);
+      border-radius: 40px;
+      border: 1px solid var(--card-border);
+    }
+    .empty-state i {
+      font-size: 70px;
+      color: var(--gold);
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+    .empty-state h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .empty-state p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+    .btn-large {
+      background: var(--gradient-gold);
+      border: none;
+      border-radius: 40px;
+      padding: 14px 28px;
+      font-weight: 800;
+      color: #0A0B10;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+    .btn-large:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav-premium {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8, 11, 18, 0.96);
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 12px 22px;
+      border-top: 1px solid rgba(247,147,26,0.4);
+      z-index: 100;
+    }
+    .nav-premium-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-secondary);
+      transition: 0.2s;
+      gap: 4px;
+    }
+    .nav-premium-item i {
+      font-size: 24px;
+    }
+    .nav-premium-item span {
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .nav-premium-item.active {
+      color: var(--gold);
+      text-shadow: 0 0 6px rgba(247,147,26,0.5);
+    }
+
+    /* Modal */
+    .modal-crypto {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-card {
+      background: #0F121C;
+      border-radius: 48px;
+      max-width: 360px;
+      width: 100%;
+      padding: 28px 24px;
+      text-align: center;
+      border: 1px solid var(--gold);
+      box-shadow: 0 30px 40px black;
+    }
+    .modal-card .modal-icon {
+      font-size: 52px;
+      margin-bottom: 12px;
+    }
+    .modal-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .modal-text {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .modal-btn-gold {
+      background: var(--gradient-gold);
+      border: none;
+      border-radius: 60px;
+      padding: 14px;
+      width: 100%;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .investasi-details {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .stat-card .value {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="crypto-bg"></div>
+<div class="grid-overlay"></div>
+<div class="bitcoin-logo-bg"><i class="fab fa-bitcoin"></i></div>
+<div class="glow-spot"></div>
+
+<header class="crypto-header">
+  <div class="logo-area">
+    <div class="btc-icon-badge"><i class="fab fa-bitcoin"></i></div>
+    <div class="logo-text">
+      <h1>CRYPTO WEALTH</h1>
+      <p><i class="fas fa-shield-alt"></i> Portofolio Investasi</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="label">Total Investasi (IDR)</div>
+      <div class="value" id="totalInvestasi">Rp 0</div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <i class="fas fa-chart-line"></i>
+    <h2>Portofolio Aktif</h2>
+  </div>
+  <div class="investasi-list" id="investasiGrid"></div>
+
+  <div class="empty-state" id="emptyState" style="display: none;">
+    <i class="fab fa-bitcoin"></i>
+    <h3>Belum Ada Investasi</h3>
+    <p>Anda belum memiliki paket Bitcoin Mining.</p>
+    <button class="btn-large" onclick="goPage('dashboard.html')">Beli Sekarang</button>
+  </div>
+</main>
+
+<nav class="bottom-nav-premium">
+  <a href="dashboard.html" class="nav-premium-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+  <a href="investasi.html" class="nav-premium-item active"><i class="fas fa-chart-line"></i><span>Investasi</span></a>
+  <a href="undang.html" class="nav-premium-item"><i class="fas fa-share-alt"></i><span>Undang</span></a>
+  <a href="profil.html" class="nav-premium-item"><i class="fas fa-user-astronaut"></i><span>Profil</span></a>
+</nav>
+
+<!-- Modal -->
+<div class="modal-crypto" id="globalModal">
+  <div class="modal-card">
+    <div class="modal-icon" id="modalIcon"><i class="fas fa-check-circle" style="color: #F7931A;"></i></div>
+    <div class="modal-title" id="modalTitle">Sukses</div>
+    <div class="modal-text" id="modalMessage"></div>
+    <button class="modal-btn-gold" id="modalCloseBtn">Oke</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  // Daftar produk Bitcoin (sama dengan dashboard)
+  const produkList = [
+    { kode: 'BTC1', harga: 100000, persentase: 20.0, masaAktif: 95, nama: 'Bitcoin Genesis', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC2', harga: 250000, persentase: 21.0, masaAktif: 95, nama: 'Bitcoin Quantum', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC3', harga: 350000, persentase: 22.0, masaAktif: 95, nama: 'Bitcoin Halving', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC4', harga: 500000, persentase: 23.0, masaAktif: 95, nama: 'Bitcoin Max', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC5', harga: 750000, persentase: 24.0, masaAktif: 95, nama: 'Bitcoin Elite', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC6', harga: 845000, persentase: 24.5, masaAktif: 95, nama: 'Bitcoin Prime', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC7', harga: 970000, persentase: 24.8, masaAktif: 95, nama: 'Bitcoin Infinite', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC8', harga: 1100000, persentase: 25.0, masaAktif: 95, nama: 'Bitcoin Vault', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC9', harga: 1250000, persentase: 25.5, masaAktif: 95, nama: 'Bitcoin Legacy', icon: 'fab fa-bitcoin' },
+    { kode: 'BTC10', harga: 1500000, persentase: 26.0, masaAktif: 95, nama: 'Bitcoin Ultimate', icon: 'fab fa-bitcoin' }
+  ];
+
+  function formatRupiah(n) {
+    if (n === undefined || n === null) n = 0;
+    return 'Rp ' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function hitungProfitPerhari(harga, persen) {
+    return Math.round(harga * (persen / 100));
+  }
+
+  function formatDateTime(date) {
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function showModal(title, msg, type = 'success') {
+    const modal = document.getElementById('globalModal');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerHTML = msg;
+    const iconDiv = document.getElementById('modalIcon');
+    if (type === 'success') iconDiv.innerHTML = '<i class="fas fa-check-circle" style="color: #F7931A; font-size: 52px;"></i>';
+    else iconDiv.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #EF4444; font-size: 52px;"></i>';
+    modal.style.display = 'flex';
+    document.getElementById('modalCloseBtn').onclick = () => modal.style.display = 'none';
+  }
+
+  window.goPage = (page) => { window.location.href = page; };
+
+  async function loadInvestasi() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showModal('Akses Ditolak', 'Anda harus login terlebih dahulu', 'error');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+
+    try {
+      const purchasesSnap = await get(ref(db, 'purchases/' + nohp));
+      const investasiGrid = document.getElementById('investasiGrid');
+      const emptyState = document.getElementById('emptyState');
+      
+      if (!purchasesSnap.exists()) {
+        emptyState.style.display = 'block';
+        investasiGrid.innerHTML = '';
+        document.getElementById('totalInvestasi').innerText = formatRupiah(0);
+        return;
+      }
+
+      const purchases = purchasesSnap.val();
+      investasiGrid.innerHTML = '';
+      let totalInvestasi = 0;
+      let hasActive = false;
+
+      for (const [kode, purchase] of Object.entries(purchases)) {
+        const produk = produkList.find(p => p.kode === kode);
+        if (!produk) continue;
+
+        const sisaHari = purchase.sisa_hari !== undefined ? purchase.sisa_hari : produk.masaAktif;
+        const isActive = sisaHari > 0;
+        if (isActive) {
+          hasActive = true;
+          totalInvestasi += produk.harga;
+        }
+
+        const statusText = isActive ? 'Aktif' : 'Selesai';
+        const statusClass = isActive ? 'status-active' : 'status-completed';
+        const tanggalBeli = new Date(purchase.tanggal);
+        const profitPerHari = hitungProfitPerhari(produk.harga, produk.persentase);
+        const totalProfitDitarik = purchase.total_withdrawn || 0;
+
+        const div = document.createElement('div');
+        div.className = 'investasi-item';
+        div.innerHTML = `
+          <div class="investasi-header">
+            <div class="investasi-logo"><i class="fab fa-bitcoin"></i></div>
+            <div class="investasi-info">
+              <div class="investasi-name">${produk.nama}</div>
+              <span class="investasi-status ${statusClass}">${statusText}</span>
+            </div>
+          </div>
+          <div class="investasi-details">
+            <div class="detail-item">
+              <span class="detail-label">Nilai Investasi</span>
+              <span class="detail-value">${formatRupiah(produk.harga)}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Profit/Hari</span>
+              <span class="detail-value">${formatRupiah(profitPerHari)}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Sisa Hari</span>
+              <span class="detail-value">${sisaHari} Hari</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Persentase</span>
+              <span class="detail-value">${produk.persentase}%</span>
+            </div>
+          </div>
+          <div class="timeline">
+            <div class="timeline-title"><i class="fas fa-clock"></i> Timeline Investasi</div>
+            <div class="timeline-item">
+              <span class="timeline-label">Dibeli pada</span>
+              <span class="timeline-value">${formatDateTime(tanggalBeli)}</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-label">Total Profit Diterima</span>
+              <span class="timeline-value">${formatRupiah(totalProfitDitarik)}</span>
+            </div>
+          </div>
+        `;
+        investasiGrid.appendChild(div);
+      }
+
+      document.getElementById('totalInvestasi').innerText = formatRupiah(totalInvestasi);
+      emptyState.style.display = hasActive ? 'none' : 'block';
+      if (!hasActive) investasiGrid.innerHTML = '';
+
+    } catch (error) {
+      console.error('Error loading investasi:', error);
+      showModal('Error', 'Gagal memuat data investasi', 'error');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('nohp')) {
+      showModal('Perlu Login', 'Silakan login terlebih dahulu', 'error');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    loadInvestasi();
+  });
+</script>
+</body>
+</html>

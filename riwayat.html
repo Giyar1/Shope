@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BitVault • Riwayat Transaksi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-primary: #05070C;
+      --bg-secondary: #0B0F17;
+      --card-bg: rgba(18, 24, 36, 0.75);
+      --gold: #F0B90B;
+      --gold-dark: #D4940A;
+      --gold-glow: rgba(240, 185, 11, 0.3);
+      --text-primary: #FFFFFF;
+      --text-secondary: #A0AABF;
+      --border-light: rgba(240, 185, 11, 0.2);
+      --shadow-premium: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+      --gradient-gold: linear-gradient(135deg, #F0B90B, #F8C34A);
+    }
+
+    body {
+      background: var(--bg-primary);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* CRYPTO BACKGROUND */
+    .crypto-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 30% 20%, #0A0E1A, #03050A);
+    }
+    .grid-pattern {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(240, 185, 11, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240, 185, 11, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -1;
+    }
+    .floating-btc {
+      position: fixed;
+      bottom: 5%;
+      left: -50px;
+      font-size: 180px;
+      opacity: 0.02;
+      pointer-events: none;
+      transform: rotate(-15deg);
+      z-index: -1;
+    }
+
+    /* HEADER */
+    .header {
+      padding: 24px 24px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-light);
+      background: rgba(5, 7, 12, 0.6);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid var(--border-light);
+    }
+    .back-btn i {
+      font-size: 18px;
+      color: var(--gold);
+    }
+    .back-btn:hover {
+      background: rgba(240, 185, 11, 0.15);
+      transform: translateX(-3px);
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    /* MAIN */
+    main {
+      padding: 24px;
+      max-width: 600px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+
+    /* STATS CARD */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      flex: 1;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+      transition: 0.2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(240, 185, 11, 0.1);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .stat-icon i {
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      background: rgba(18, 24, 36, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 60px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-light);
+    }
+    .tab {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .tab.active {
+      background: var(--gradient-gold);
+      color: #0A0B10;
+    }
+
+    /* TRANSACTION LIST */
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .transaction-item {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 18px;
+      border: 1px solid var(--border-light);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .transaction-item:hover {
+      transform: translateX(4px);
+      border-color: var(--gold);
+    }
+    .transaction-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(240, 185, 11, 0.1);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .transaction-icon i {
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .transaction-info {
+      flex: 1;
+    }
+    .transaction-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .transaction-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .transaction-amount {
+      text-align: right;
+    }
+    .amount-value {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .amount-value.deposit {
+      color: #10B981;
+    }
+    .amount-value.withdraw {
+      color: #F0B90B;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10B981;
+    }
+    .status-pending {
+      background: rgba(240, 185, 11, 0.15);
+      color: #F0B90B;
+    }
+    .status-failed {
+      background: rgba(239, 68, 68, 0.15);
+      color: #EF4444;
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 40px;
+      border: 1px solid var(--border-light);
+    }
+    .empty-state i {
+      font-size: 64px;
+      color: var(--gold);
+      opacity: 0.4;
+      margin-bottom: 16px;
+    }
+    .empty-state h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .empty-state p {
+      color: var(--text-secondary);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-container {
+      background: #0F121C;
+      border-radius: 48px;
+      max-width: 340px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      border: 1px solid var(--gold);
+    }
+    .modal-container i {
+      font-size: 56px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .modal-container h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .modal-container p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+    .modal-btn {
+      background: var(--gradient-gold);
+      border: none;
+      border-radius: 60px;
+      padding: 14px;
+      width: 100%;
+      font-weight: 700;
+      cursor: pointer;
+      color: #0A0B10;
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 20px;
+      }
+      .stats-row {
+        flex-direction: column;
+      }
+      .transaction-item {
+        flex-direction: column;
+        text-align: center;
+      }
+      .transaction-amount {
+        text-align: center;
+      }
+      .transaction-meta {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="crypto-bg"></div>
+<div class="grid-pattern"></div>
+<div class="floating-btc"><i class="fab fa-bitcoin"></i></div>
+
+<div class="header">
+  <div class="back-btn" onclick="goPage('profil.html')">
+    <i class="fas fa-arrow-left"></i>
+  </div>
+  <h1>Riwayat Transaksi</h1>
+</div>
+
+<main>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-arrow-down"></i></div>
+      <div class="stat-label">Total Deposit</div>
+      <div class="stat-value" id="totalDeposit">Rp 0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-arrow-up"></i></div>
+      <div class="stat-label">Total Penarikan</div>
+      <div class="stat-value" id="totalWithdraw">Rp 0</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="filterTransactions('deposit')">Deposit</button>
+    <button class="tab" onclick="filterTransactions('withdraw')">Penarikan</button>
+  </div>
+
+  <div class="transaction-list" id="transactionList">
+    <div class="empty-state">
+      <i class="fas fa-clock"></i>
+      <h3>Memuat data...</h3>
+      <p>Silakan tunggu</p>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-container">
+    <i class="fas fa-circle-info"></i>
+    <h3 id="modalTitle">Info</h3>
+    <p id="modalMessage"></p>
+    <button class="modal-btn" onclick="closeModal()">Mengerti</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let allTransactions = [];
+  let currentFilter = 'deposit';
+
+  function formatRupiah(n) {
+    return 'Rp ' + (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function formatDateTime(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function showModal(title, msg) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerHTML = msg;
+    modal.style.display = 'flex';
+  }
+  window.closeModal = () => document.getElementById('modal').style.display = 'none';
+  window.goPage = (page) => window.location.href = page;
+
+  async function loadTransactions() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showModal('Akses Ditolak', 'Silakan login kembali');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+
+    try {
+      const [depositsSnap, withdrawalsSnap] = await Promise.all([
+        get(ref(db, 'deposits/' + nohp)),
+        get(ref(db, 'withdrawals/' + nohp))
+      ]);
+
+      allTransactions = [];
+      let totalDeposit = 0;
+      let totalWithdraw = 0;
+
+      if (depositsSnap.exists()) {
+        const deposits = depositsSnap.val();
+        for (const [id, data] of Object.entries(deposits)) {
+          const amount = data.amount || 0;
+          const status = data.status || 'pending';
+          if (status === 'success' || status === 'completed') totalDeposit += amount;
+          allTransactions.push({
+            id,
+            type: 'deposit',
+            title: 'Deposit Saldo',
+            method: 'Transfer Bank (QRIS)',
+            amount,
+            status,
+            date: data.date || new Date().toISOString(),
+            uniqueCode: data.uniqueCode
+          });
+        }
+      }
+
+      if (withdrawalsSnap.exists()) {
+        const withdrawals = withdrawalsSnap.val();
+        for (const [id, data] of Object.entries(withdrawals)) {
+          const amount = data.amount || 0;
+          const netAmount = data.netAmount || amount;
+          const status = data.status || 'pending';
+          if (status === 'success' || status === 'completed') totalWithdraw += amount;
+          allTransactions.push({
+            id,
+            type: 'withdraw',
+            title: 'Penarikan Saldo',
+            method: 'Transfer Bank',
+            amount,
+            netAmount,
+            fee: data.fee || 0,
+            status,
+            date: data.date || new Date().toISOString()
+          });
+        }
+      }
+
+      document.getElementById('totalDeposit').innerText = formatRupiah(totalDeposit);
+      document.getElementById('totalWithdraw').innerText = formatRupiah(totalWithdraw);
+
+      allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      displayTransactions(currentFilter);
+
+    } catch (error) {
+      console.error(error);
+      showModal('Error', 'Gagal memuat riwayat transaksi');
+      document.getElementById('transactionList').innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Gagal Memuat</h3>
+          <p>Silakan coba lagi nanti</p>
+        </div>
+      `;
+    }
+  }
+
+  function displayTransactions(filter) {
+    const container = document.getElementById('transactionList');
+    const filtered = allTransactions.filter(t => t.type === filter);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-receipt"></i>
+          <h3>Belum Ada Transaksi</h3>
+          <p>Anda belum memiliki riwayat ${filter === 'deposit' ? 'deposit' : 'penarikan'}</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = '';
+    filtered.forEach(tx => {
+      const isDeposit = tx.type === 'deposit';
+      const amount = isDeposit ? tx.amount : (tx.netAmount || tx.amount);
+      const statusClass = tx.status === 'success' || tx.status === 'completed' ? 'status-success' :
+                         (tx.status === 'pending' ? 'status-pending' : 'status-failed');
+      const statusText = tx.status === 'success' || tx.status === 'completed' ? 'Berhasil' :
+                        (tx.status === 'pending' ? 'Pending' : 'Gagal');
+
+      const div = document.createElement('div');
+      div.className = 'transaction-item';
+      div.innerHTML = `
+        <div class="transaction-icon">
+          <i class="fas ${isDeposit ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+        </div>
+        <div class="transaction-info">
+          <div class="transaction-title">${tx.title}</div>
+          <div class="transaction-meta">
+            <span><i class="fas fa-wallet"></i> ${tx.method}</span>
+            <span><i class="far fa-clock"></i> ${formatDateTime(tx.date)}</span>
+          </div>
+        </div>
+        <div class="transaction-amount">
+          <div class="amount-value ${isDeposit ? 'deposit' : 'withdraw'}">
+            ${isDeposit ? '+' : '-'} ${formatRupiah(amount)}
+          </div>
+          <div class="status-badge ${statusClass}">${statusText}</div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  window.filterTransactions = (filter) => {
+    currentFilter = filter;
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    displayTransactions(filter);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('nohp')) {
+      showModal('Perlu Login', 'Anda harus login terlebih dahulu');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    loadTransactions();
+  });
+</script>
+</body>
+</html>

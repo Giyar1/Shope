@@ -1,0 +1,2352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Belkin Power - Panel Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    :root {
+      --primary: #007AFF;
+      --primary-light: #5AC8FA;
+      --secondary: #00C7BE;
+      --accent: #FF9500;
+      --success: #34C759;
+      --warning: #FFCC00;
+      --danger: #FF3B30;
+      --bg: #0A0F1C;
+      --card: #1C1C1E;
+      --card-light: #2C2C2E;
+      --text: #FFFFFF;
+      --text-muted: #8E8E93;
+      --border: #38383A;
+      --gradient-primary: linear-gradient(135deg, #007AFF, #5AC8FA);
+      --gradient-secondary: linear-gradient(135deg, #00C7BE, #64D2FF);
+      --gradient-accent: linear-gradient(135deg, #FF9500, #FFCC00);
+      --gradient-success: linear-gradient(135deg, #34C759, #64D2FF);
+      --gradient-danger: linear-gradient(135deg, #FF3B30, #FF6B8B);
+      --gradient-belkin: linear-gradient(135deg, #0A0F1C, #1C2738);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+      --shadow-belkin: 0 10px 30px rgba(0,0,0,0.7);
+      --glow-blue: 0 0 20px rgba(0, 122, 255, 0.4);
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 14px;
+      padding-bottom: 20px;
+    }
+    
+    /* Login Styles */
+    .login-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-belkin);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    
+    .login-box {
+      background: var(--gradient-belkin);
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-belkin);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+    
+    .login-icon {
+      width: 70px;
+      height: 70px;
+      background: var(--gradient-primary);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: var(--shadow-belkin);
+    }
+    
+    .login-icon i {
+      font-size: 32px;
+      color: white;
+    }
+    
+    .login-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #5AC8FA, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .login-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s ease;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(0,122,255,0.1);
+      box-shadow: var(--glow-blue);
+    }
+    
+    .btn-login {
+      width: 100%;
+      padding: 16px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: var(--shadow-belkin);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg), var(--glow-blue);
+    }
+    
+    .error-message {
+      color: var(--danger);
+      text-align: center;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+    }
+    
+    /* Security Features */
+    .security-notice {
+      background: rgba(255, 149, 0, 0.1);
+      border-radius: 12px;
+      padding: 14px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      border-left: 3px solid var(--accent);
+      font-weight: 500;
+      text-align: left;
+    }
+    
+    .security-notice i {
+      color: var(--accent);
+      margin-right: 8px;
+    }
+    
+    .login-attempts {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      text-align: center;
+    }
+    
+    /* Admin Panel Styles */
+    .admin-panel {
+      display: none;
+    }
+    
+    /* Header */
+    header {
+      background: var(--gradient-belkin);
+      padding: 15px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-button {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    
+    .back-button:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+    }
+    
+    .header-text {
+      flex: 1;
+      text-align: center;
+      padding: 0 10px;
+    }
+    
+    .header-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 2px;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #5AC8FA, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    
+    .logout-btn {
+      background: rgba(255,59,48,0.2);
+      border: none;
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FF3B30;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(255,59,48,0.3);
+      transform: translateY(-2px);
+    }
+    
+    /* Main Content */
+    main {
+      padding: 16px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    
+    /* Stats Grid - Mobile Friendly */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .stat-card {
+      background: var(--gradient-belkin);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-belkin);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+    
+    .stat-card:nth-child(2)::before {
+      background: var(--gradient-secondary);
+    }
+    
+    .stat-card:nth-child(3)::before {
+      background: var(--gradient-success);
+    }
+    
+    .stat-card:nth-child(4)::before {
+      background: var(--gradient-accent);
+    }
+    
+    .stat-value {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+    
+    .stat-card:nth-child(1) .stat-value {
+      background: linear-gradient(135deg, #5AC8FA, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-card:nth-child(2) .stat-value {
+      background: linear-gradient(135deg, #00C7BE, #64D2FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-card:nth-child(3) .stat-value {
+      background: linear-gradient(135deg, #34C759, #64D2FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-card:nth-child(4) .stat-value {
+      background: linear-gradient(135deg, #FF9500, #FFCC00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    
+    /* Navigation Tabs - Horizontal Scroll */
+    .nav-tabs-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 20px;
+      padding-bottom: 5px;
+    }
+    
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      min-width: max-content;
+      padding: 0 2px;
+    }
+    
+    .nav-tab {
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: fit-content;
+    }
+    
+    .nav-tab.active {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+      border-color: var(--primary);
+    }
+    
+    .nav-tab i {
+      font-size: 14px;
+    }
+    
+    /* Content Sections */
+    .content {
+      display: none;
+    }
+    
+    .content.active {
+      display: block;
+    }
+    
+    /* Search Box */
+    .search-box {
+      background: var(--gradient-belkin);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: var(--shadow-belkin);
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(0,122,255,0.1);
+    }
+    
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+    
+    /* Cards Container */
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    /* Card Styles */
+    .card {
+      background: var(--gradient-belkin);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow-belkin);
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+    
+    .card.deposit::before {
+      background: var(--gradient-success);
+    }
+    
+    .card.withdraw::before {
+      background: var(--gradient-secondary);
+    }
+    
+    .card.user::before {
+      background: var(--gradient-primary);
+    }
+    
+    .card.bank::before {
+      background: var(--gradient-accent);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .card-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .badge-pending {
+      background: rgba(255, 149, 0, 0.2);
+      color: #FF9500;
+    }
+    
+    .badge-success {
+      background: rgba(52, 199, 89, 0.2);
+      color: #34C759;
+    }
+    
+    .badge-failed {
+      background: rgba(255, 59, 48, 0.2);
+      color: #FF3B30;
+    }
+    
+    .badge-warning {
+      background: rgba(255, 204, 0, 0.2);
+      color: #FFCC00;
+    }
+    
+    .card-body {
+      margin-bottom: 12px;
+    }
+    
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      flex: 1;
+    }
+    
+    .info-value {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: right;
+      flex: 1;
+    }
+    
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Action Buttons */
+    .btn {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex: 1;
+    }
+    
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+    
+    .btn-success {
+      background: var(--gradient-success);
+      color: white;
+    }
+    
+    .btn-danger {
+      background: var(--gradient-danger);
+      color: white;
+    }
+    
+    .btn-warning {
+      background: rgba(255, 149, 0, 0.2);
+      color: #FF9500;
+      border: 1px solid rgba(255, 149, 0, 0.3);
+    }
+    
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .btn i {
+      font-size: 11px;
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .modal-content {
+      background: var(--gradient-belkin);
+      padding: 20px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-belkin);
+      border: 1px solid rgba(255,255,255,0.1);
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gradient-primary);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #5AC8FA, #FFFFFF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .modal-close {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    
+    .modal-body {
+      margin-bottom: 16px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+    
+    .empty-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    
+    .empty-description {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    
+    /* Session Timer */
+    .session-timer {
+      background: rgba(52, 199, 89, 0.1);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(52, 199, 89, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    
+    .session-timer i {
+      color: var(--success);
+    }
+    
+    .timer-text {
+      flex: 1;
+    }
+    
+    .timer-value {
+      font-weight: 700;
+      color: var(--success);
+    }
+    
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-light);
+    }
+    
+    /* Responsive */
+    @media (min-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      
+      .nav-tabs {
+        flex-wrap: wrap;
+      }
+      
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 16px;
+      }
+    }
+    
+    @media (max-width: 380px) {
+      .stat-card {
+        padding: 14px;
+      }
+      
+      .nav-tab {
+        padding: 10px 14px;
+        font-size: 12px;
+      }
+      
+      .card {
+        padding: 14px;
+      }
+      
+      .btn {
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+      
+      .modal-content {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Section -->
+  <div id="login-section" class="login-container">
+    <div class="login-box">
+      <div class="login-icon">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <h1 class="login-title">Belkin Power Admin</h1>
+      <p class="login-subtitle">Panel Admin Terproteksi</p>
+      
+      <div class="security-notice">
+        <i class="fas fa-lock"></i>
+        <span>Akses terbatas untuk administrator terotorisasi.</span>
+      </div>
+      
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" id="username" name="username" class="form-input" placeholder="Masukkan username" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" id="password" name="password" class="form-input" placeholder="Masukkan password" required autocomplete="off">
+        </div>
+        <button type="submit" class="btn-login">
+          <i class="fas fa-sign-in-alt"></i> Login Admin
+        </button>
+        <div id="errorMessage" class="error-message">Username atau password salah!</div>
+        <div class="login-attempts" id="loginAttempts">
+          Percobaan login: <span id="attemptCount">0</span>/5
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Panel Section -->
+  <div id="admin-panel" class="admin-panel">
+    <header>
+      <div class="header-content">
+        <button class="back-button" onclick="goPage('dashboard.html')">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="header-text">
+          <h1 class="header-title">Panel Admin</h1>
+          <p class="header-subtitle">Belkin Power Dashboard</p>
+        </div>
+        <button class="logout-btn" onclick="logoutAdmin()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </header>
+    
+    <main>
+      <!-- Session Timer -->
+      <div class="session-timer">
+        <i class="fas fa-clock"></i>
+        <div class="timer-text">Sesi aktif akan berakhir dalam:</div>
+        <div class="timer-value" id="sessionTimer">15:00</div>
+      </div>
+      
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalUsers">0</div>
+          <div class="stat-label">Total User</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalSaldo">Rp 0</div>
+          <div class="stat-label">Total Saldo</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalDeposit">Rp 0</div>
+          <div class="stat-label">Total Deposit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalWithdraw">Rp 0</div>
+          <div class="stat-label">Total Withdraw</div>
+        </div>
+      </div>
+      
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs-container">
+        <div class="nav-tabs">
+          <button class="nav-tab active" onclick="showSection('dashboard')">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </button>
+          <button class="nav-tab" onclick="showSection('users')">
+            <i class="fas fa-users"></i> Users
+          </button>
+          <button class="nav-tab" onclick="showSection('deposits')">
+            <i class="fas fa-arrow-down"></i> Deposits
+          </button>
+          <button class="nav-tab" onclick="showSection('withdrawals')">
+            <i class="fas fa-arrow-up"></i> Withdrawals
+          </button>
+          <button class="nav-tab" onclick="showSection('transactions')">
+            <i class="fas fa-exchange-alt"></i> All Trans
+          </button>
+          <button class="nav-tab" onclick="showSection('banks')">
+            <i class="fas fa-university"></i> Banks
+          </button>
+          <button class="nav-tab" onclick="showSection('products')">
+            <i class="fas fa-box"></i> Products
+          </button>
+        </div>
+      </div>
+      
+      <!-- Search Box -->
+      <div class="search-box" id="searchContainer">
+        <input type="text" class="search-input" id="searchInput" placeholder="Cari berdasarkan nomor HP, nama, atau ID..." onkeyup="searchData()">
+      </div>
+      
+      <!-- Content Sections -->
+      <div id="dashboard-content" class="content active">
+        <div class="cards-container" id="dashboardCards">
+          <!-- Recent activities will be loaded here -->
+        </div>
+      </div>
+      
+      <div id="users-content" class="content">
+        <div class="cards-container" id="usersCards">
+          <!-- Users data will be loaded here -->
+        </div>
+      </div>
+      
+      <div id="deposits-content" class="content">
+        <div class="cards-container" id="depositsCards">
+          <!-- Deposits data will be loaded here -->
+        </div>
+      </div>
+      
+      <div id="withdrawals-content" class="content">
+        <div class="cards-container" id="withdrawalsCards">
+          <!-- Withdrawals data will be loaded here -->
+        </div>
+      </div>
+      
+      <div id="transactions-content" class="content">
+        <div class="cards-container" id="transactionsCards">
+          <!-- All transactions will be loaded here -->
+        </div>
+      </div>
+      
+      <div id="banks-content" class="content">
+        <div class="cards-container" id="banksCards">
+          <!-- Bank accounts will be loaded here -->
+        </div>
+      </div>
+      
+      <div id="products-content" class="content">
+        <div class="cards-container" id="productsCards">
+          <!-- Products data will be loaded here -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Edit Data</h3>
+        <button class="modal-close" onclick="closeEditModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Modal content will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeEditModal()">Batal</button>
+        <button class="btn btn-primary" onclick="saveEditData()">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, onValue, get, update, set, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+      authDomain: "lginvest-776cf.firebaseapp.com",
+      databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+      projectId: "lginvest-776cf",
+      storageBucket: "lginvest-776cf.firebasestorage.app",
+      messagingSenderId: "831934282072",
+      appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+      measurementId: "G-265YF9DYCF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Global variables
+    let allUsers = [];
+    let allDeposits = [];
+    let allWithdrawals = [];
+    let allBanks = [];
+    let allProducts = [];
+    let allTransactions = [];
+    let currentEditData = null;
+    let currentEditType = null;
+    
+    // Security variables
+    let loginAttempts = 0;
+    const MAX_LOGIN_ATTEMPTS = 5;
+    let sessionTimer = null;
+    const SESSION_DURATION = 15 * 60 * 1000; // 15 minutes
+
+    // Login Functions
+    function validateCredentials(username, password) {
+      return username === 'BELKIN_120506' && password === 'BELKIN_120506';
+    }
+
+    function storeSession() {
+      const sessionData = {
+        token: 'sess_' + Math.random().toString(36).substr(2, 9),
+        expires: Date.now() + SESSION_DURATION
+      };
+      localStorage.setItem('adminSession', JSON.stringify(sessionData));
+    }
+
+    function getSession() {
+      const sessionData = localStorage.getItem('adminSession');
+      if (!sessionData) return null;
+      
+      try {
+        const session = JSON.parse(sessionData);
+        if (session.expires > Date.now()) {
+          return session.token;
+        } else {
+          localStorage.removeItem('adminSession');
+          return null;
+        }
+      } catch (e) {
+        localStorage.removeItem('adminSession');
+        return null;
+      }
+    }
+
+    function clearSession() {
+      localStorage.removeItem('adminSession');
+      if (sessionTimer) {
+        clearInterval(sessionTimer);
+        sessionTimer = null;
+      }
+    }
+
+    function startSessionTimer() {
+      const sessionData = localStorage.getItem('adminSession');
+      if (!sessionData) return;
+      
+      const session = JSON.parse(sessionData);
+      let timeLeft = session.expires - Date.now();
+      
+      if (timeLeft <= 0) {
+        logoutAdmin();
+        return;
+      }
+      
+      // Update timer every second
+      sessionTimer = setInterval(() => {
+        timeLeft -= 1000;
+        
+        if (timeLeft <= 0) {
+          logoutAdmin();
+          return;
+        }
+        
+        const minutes = Math.floor(timeLeft / 60000);
+        const seconds = Math.floor((timeLeft % 60000) / 1000);
+        document.getElementById('sessionTimer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    // Login Form Handler
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      // Check max attempts
+      if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+        document.getElementById('errorMessage').textContent = 'Terlalu banyak percobaan login. Tunggu 15 menit.';
+        document.getElementById('errorMessage').style.display = 'block';
+        
+        document.getElementById('username').disabled = true;
+        document.getElementById('password').disabled = true;
+        document.querySelector('.btn-login').disabled = true;
+        
+        setTimeout(() => {
+          loginAttempts = 0;
+          document.getElementById('username').disabled = false;
+          document.getElementById('password').disabled = false;
+          document.querySelector('.btn-login').disabled = false;
+          document.getElementById('errorMessage').style.display = 'none';
+          document.getElementById('attemptCount').textContent = '0';
+        }, 15 * 60 * 1000);
+        return;
+      }
+      
+      // Validate credentials
+      if (validateCredentials(username, password)) {
+        loginAttempts = 0;
+        document.getElementById('attemptCount').textContent = '0';
+        
+        storeSession();
+        showAdminPanel();
+      } else {
+        loginAttempts++;
+        document.getElementById('attemptCount').textContent = loginAttempts;
+        document.getElementById('errorMessage').style.display = 'block';
+        
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('username').focus();
+        
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS - 2) {
+          document.getElementById('errorMessage').textContent = 
+            `Username atau password salah! Percobaan ${loginAttempts}/${MAX_LOGIN_ATTEMPTS}`;
+        }
+      }
+    });
+
+    // Navigation
+    function checkLoginStatus() {
+      const sessionToken = getSession();
+      if (sessionToken) {
+        showAdminPanel();
+      }
+    }
+
+    function showAdminPanel() {
+      document.getElementById('login-section').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      startSessionTimer();
+      loadAdminData();
+    }
+
+    function showLoginForm() {
+      document.getElementById('login-section').style.display = 'flex';
+      document.getElementById('admin-panel').style.display = 'none';
+      clearSession();
+    }
+
+    window.logoutAdmin = function() {
+      clearSession();
+      showLoginForm();
+    };
+
+    window.goPage = function(page) {
+      window.location.href = page;
+    };
+
+    // Format Functions
+    function formatRupiah(amount) {
+      return 'Rp ' + parseInt(amount || 0).toLocaleString('id-ID');
+    }
+
+    function formatDateTime(timestamp) {
+      if (!timestamp) return '-';
+      const date = new Date(timestamp);
+      return date.toLocaleString('id-ID');
+    }
+
+    function getStatusBadge(status) {
+      switch(status) {
+        case 'success':
+        case 'completed':
+        case 'acc':
+        case 'waiting_verification':
+          return '<span class="card-badge badge-success">BERHASIL</span>';
+        case 'pending':
+          return '<span class="card-badge badge-pending">PENDING</span>';
+        case 'failed':
+        case 'rejected':
+          return '<span class="card-badge badge-failed">GAGAL</span>';
+        default:
+          return '<span class="card-badge badge-warning">' + status.toUpperCase() + '</span>';
+      }
+    }
+
+    // Load Admin Data - FIXED untuk membaca deposit dari all_deposits
+    async function loadAdminData() {
+      try {
+        console.log('Memuat data admin...');
+        
+        // Baca SEMUA data dalam satu Promise.all
+        const [usersSnap, depositsSnap, withdrawalsSnap, banksSnap, productsSnap] = await Promise.all([
+          get(ref(db, 'users')),
+          get(ref(db, 'all_deposits')),  // BACA DARI all_deposits
+          get(ref(db, 'withdrawals')),
+          get(ref(db, 'banks')),
+          get(ref(db, 'products'))
+        ]);
+
+        // Reset arrays
+        allUsers = [];
+        allDeposits = [];
+        allWithdrawals = [];
+        allBanks = [];
+        allProducts = [];
+        allTransactions = [];
+        
+        let totalSaldo = 0;
+        let totalDepositAmount = 0;
+        let totalWithdrawAmount = 0;
+
+        // Process Users
+        if (usersSnap.exists()) {
+          const usersData = usersSnap.val();
+          
+          for (const nohp in usersData) {
+            const user = usersData[nohp];
+            const saldo = parseInt(user.saldo) || 0;
+            
+            allUsers.push({
+              nohp: nohp,
+              nama: user.nama || user.name || '-',
+              saldo: saldo,
+              password: user.password || '-',
+              upline: user.upline || '-',
+              isBanned: user.isBanned || false,
+              created_at: user.created_at || '-'
+            });
+            
+            totalSaldo += saldo;
+          }
+        }
+
+        // Process DEPOSITS dari all_deposits - INI YANG DIPERBAIKI
+        if (depositsSnap.exists()) {
+          console.log('Data deposits ditemukan di all_deposits:', depositsSnap.val());
+          const depositsData = depositsSnap.val();
+          
+          for (const transactionId in depositsData) {
+            const deposit = depositsData[transactionId];
+            const amount = parseInt(deposit.amount) || 0;
+            const uniqueCode = deposit.uniqueCode || 0;
+            const totalAmount = deposit.totalAmount || (amount + uniqueCode);
+            
+            allDeposits.push({
+              id: transactionId,
+              nohp: deposit.customerId || deposit.nohp || '-',
+              userName: deposit.userName || '-',
+              amount: amount,
+              uniqueCode: uniqueCode,
+              totalAmount: totalAmount,
+              status: deposit.status || 'pending',
+              date: deposit.date || deposit.timestamp,
+              telegramSent: deposit.telegramSent || false,
+              confirmedAt: deposit.confirmedAt || null,
+              type: 'deposit'
+            });
+            
+            // Hitung total deposit yang berhasil
+            if (deposit.status === 'waiting_verification' || deposit.status === 'success') {
+              totalDepositAmount += amount;
+            }
+            
+            // Tambahkan ke allTransactions
+            allTransactions.push({
+              id: transactionId,
+              nohp: deposit.customerId || deposit.nohp || '-',
+              amount: amount,
+              type: 'deposit',
+              status: deposit.status || 'pending',
+              date: deposit.date || deposit.timestamp
+            });
+          }
+        } else {
+          console.log('Tidak ada data di all_deposits, coba cek path yang benar');
+        }
+
+        // Process Withdrawals
+        if (withdrawalsSnap.exists()) {
+          const withdrawalsData = withdrawalsSnap.val();
+          
+          for (const nohp in withdrawalsData) {
+            const userWithdrawals = withdrawalsData[nohp];
+            
+            for (const withdrawalId in userWithdrawals) {
+              const withdrawal = userWithdrawals[withdrawalId];
+              const amount = parseInt(withdrawal.amount) || 0;
+              
+              allWithdrawals.push({
+                id: withdrawalId,
+                nohp: nohp,
+                amount: amount,
+                netAmount: withdrawal.netAmount || amount,
+                fee: withdrawal.fee || 0,
+                bankType: withdrawal.bankType || '-',
+                bankName: withdrawal.bankName || '-',
+                bankNumber: withdrawal.bankNumber || '-',
+                status: withdrawal.status || 'pending',
+                date: withdrawal.date || new Date().toISOString(),
+                type: 'withdraw'
+              });
+              
+              if (withdrawal.status === 'success' || withdrawal.status === 'acc') {
+                totalWithdrawAmount += amount;
+              }
+              
+              // Tambahkan ke allTransactions
+              allTransactions.push({
+                id: withdrawalId,
+                nohp: nohp,
+                amount: amount,
+                type: 'withdraw',
+                status: withdrawal.status || 'pending',
+                date: withdrawal.date || new Date().toISOString()
+              });
+            }
+          }
+        }
+
+        // Process Banks
+        if (banksSnap.exists()) {
+          const banksData = banksSnap.val();
+          
+          for (const nohp in banksData) {
+            const userBanks = banksData[nohp];
+            
+            if (userBanks && typeof userBanks === 'object') {
+              // Handle primary bank
+              if (userBanks.primary) {
+                const bank = userBanks.primary;
+                allBanks.push({
+                  nohp: nohp,
+                  bank_id: 'primary',
+                  bank_type: bank.bankType || '-',
+                  account_holder: bank.accountHolder || '-',
+                  account_number: bank.accountNumber || '-'
+                });
+              }
+              // Handle multiple banks
+              else {
+                for (const bankId in userBanks) {
+                  const bank = userBanks[bankId];
+                  if (bank && typeof bank === 'object') {
+                    allBanks.push({
+                      nohp: nohp,
+                      bank_id: bankId,
+                      bank_type: bank.bankType || '-',
+                      account_holder: bank.accountHolder || '-',
+                      account_number: bank.accountNumber || '-'
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // Process Products
+        if (productsSnap.exists()) {
+          const productsData = productsSnap.val();
+          
+          for (const nohp in productsData) {
+            const userProducts = productsData[nohp];
+            
+            if (userProducts && typeof userProducts === 'object') {
+              for (const productId in userProducts) {
+                const product = userProducts[productId];
+                if (product && typeof product === 'object') {
+                  allProducts.push({
+                    nohp: nohp,
+                    product_id: productId,
+                    product_name: product.name || product.productName || 'Produk',
+                    purchase_date: product.purchaseDate || product.date || '-',
+                    status: product.status || 'active',
+                    amount: product.amount || product.price || 0
+                  });
+                }
+              }
+            }
+          }
+        }
+
+        // Update statistics
+        document.getElementById('totalUsers').textContent = allUsers.length;
+        document.getElementById('totalSaldo').textContent = formatRupiah(totalSaldo);
+        document.getElementById('totalDeposit').textContent = formatRupiah(totalDepositAmount);
+        document.getElementById('totalWithdraw').textContent = formatRupiah(totalWithdrawAmount);
+
+        // Display data
+        displayDashboard();
+        displayUsers();
+        displayDeposits();
+        displayWithdrawals();
+        displayTransactions();
+        displayBanks();
+        displayProducts();
+
+        console.log('Data berhasil dimuat:');
+        console.log('- Users:', allUsers.length);
+        console.log('- Deposits:', allDeposits.length);
+        console.log('- Withdrawals:', allWithdrawals.length);
+        console.log('- Banks:', allBanks.length);
+        console.log('- Products:', allProducts.length);
+
+      } catch (error) {
+        console.error('Error loading admin data:', error);
+        alert('Error memuat data: ' + error.message);
+      }
+    }
+
+    // Display Functions
+    function displayDashboard() {
+      const container = document.getElementById('dashboardCards');
+      const recentActivities = [...allDeposits, ...allWithdrawals]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 10);
+      
+      if (recentActivities.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-chart-bar"></i></div>
+            <div class="empty-title">Tidak Ada Aktivitas</div>
+            <div class="empty-description">Belum ada aktivitas transaksi terbaru.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      recentActivities.forEach(activity => {
+        const isDeposit = activity.type === 'deposit';
+        const card = document.createElement('div');
+        card.className = `card ${isDeposit ? 'deposit' : 'withdraw'}`;
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">
+              ${isDeposit ? '<i class="fas fa-arrow-down" style="color: #34C759; margin-right: 6px;"></i> Deposit' : 
+                           '<i class="fas fa-arrow-up" style="color: #00C7BE; margin-right: 6px;"></i> Withdraw'}
+            </div>
+            ${getStatusBadge(activity.status)}
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">User:</span>
+              <span class="info-value">${activity.nohp}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Jumlah:</span>
+              <span class="info-value">${formatRupiah(activity.amount)}</span>
+            </div>
+            ${isDeposit && activity.uniqueCode ? `
+            <div class="info-row">
+              <span class="info-label">Kode Unik:</span>
+              <span class="info-value">${activity.uniqueCode}</span>
+            </div>
+            ` : ''}
+            <div class="info-row">
+              <span class="info-label">Waktu:</span>
+              <span class="info-value">${formatDateTime(activity.date)}</span>
+            </div>
+          </div>
+          ${activity.status === 'pending' || activity.status === 'waiting_verification' ? `
+          <div class="card-actions">
+            <button class="btn btn-success" onclick="approveTransaction('${activity.type}', '${activity.nohp}', '${activity.id}', ${activity.amount})">
+              <i class="fas fa-check"></i> Setujui
+            </button>
+            <button class="btn btn-danger" onclick="rejectTransaction('${activity.type}', '${activity.nohp}', '${activity.id}')">
+              <i class="fas fa-times"></i> Tolak
+            </button>
+          </div>
+          ` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayUsers() {
+      const container = document.getElementById('usersCards');
+      
+      if (allUsers.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-users"></i></div>
+            <div class="empty-title">Tidak Ada User</div>
+            <div class="empty-description">Belum ada user yang terdaftar.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      allUsers.forEach(user => {
+        const card = document.createElement('div');
+        card.className = 'card user';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${user.nohp}</div>
+            ${user.isBanned ? '<span class="card-badge badge-danger">BANNED</span>' : 
+                             '<span class="card-badge badge-success">AKTIF</span>'}
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">Nama:</span>
+              <span class="info-value">${user.nama}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Saldo:</span>
+              <span class="info-value">${formatRupiah(user.saldo)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Upline:</span>
+              <span class="info-value">${user.upline}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Tanggal Daftar:</span>
+              <span class="info-value">${formatDateTime(user.created_at)}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary" onclick="editUser('${user.nohp}')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn ${user.isBanned ? 'btn-success' : 'btn-warning'}" onclick="${user.isBanned ? 'unbanUser' : 'banUser'}('${user.nohp}')">
+              <i class="fas ${user.isBanned ? 'fa-unlock' : 'fa-ban'}"></i> ${user.isBanned ? 'Unban' : 'Ban'}
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayDeposits() {
+      const container = document.getElementById('depositsCards');
+      const pendingDeposits = allDeposits.filter(d => 
+        d.status === 'pending' || d.status === 'waiting_verification'
+      );
+      
+      if (pendingDeposits.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-arrow-down"></i></div>
+            <div class="empty-title">Tidak Ada Deposit</div>
+            <div class="empty-description">Tidak ada deposit yang menunggu verifikasi.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      pendingDeposits.forEach(deposit => {
+        const card = document.createElement('div');
+        card.className = 'card deposit';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${deposit.nohp}</div>
+            ${getStatusBadge(deposit.status)}
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">User:</span>
+              <span class="info-value">${deposit.userName || '-'}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Jumlah:</span>
+              <span class="info-value">${formatRupiah(deposit.amount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Kode Unik:</span>
+              <span class="info-value">${deposit.uniqueCode || '0'}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Total Transfer:</span>
+              <span class="info-value">${formatRupiah(deposit.totalAmount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Telegram:</span>
+              <span class="info-value">${deposit.telegramSent ? '✅ Terkirim' : '❌ Gagal'}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Waktu:</span>
+              <span class="info-value">${formatDateTime(deposit.date)}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-success" onclick="approveDeposit('${deposit.id}', '${deposit.nohp}', ${deposit.amount})">
+              <i class="fas fa-check"></i> Setujui
+            </button>
+            <button class="btn btn-danger" onclick="rejectDeposit('${deposit.id}', '${deposit.nohp}')">
+              <i class="fas fa-times"></i> Tolak
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayWithdrawals() {
+      const container = document.getElementById('withdrawalsCards');
+      const pendingWithdrawals = allWithdrawals.filter(w => w.status === 'pending');
+      
+      if (pendingWithdrawals.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-arrow-up"></i></div>
+            <div class="empty-title">Tidak Ada Withdrawal</div>
+            <div class="empty-description">Tidak ada penarikan yang menunggu verifikasi.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      pendingWithdrawals.forEach(withdrawal => {
+        const card = document.createElement('div');
+        card.className = 'card withdraw';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${withdrawal.nohp}</div>
+            <span class="card-badge badge-pending">PENDING</span>
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">Jumlah:</span>
+              <span class="info-value">${formatRupiah(withdrawal.amount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Net Amount:</span>
+              <span class="info-value">${formatRupiah(withdrawal.netAmount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Fee:</span>
+              <span class="info-value">${formatRupiah(withdrawal.fee)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Bank:</span>
+              <span class="info-value">${withdrawal.bankType} - ${withdrawal.bankNumber}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Pemilik:</span>
+              <span class="info-value">${withdrawal.bankName}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Waktu:</span>
+              <span class="info-value">${formatDateTime(withdrawal.date)}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-success" onclick="approveWithdrawal('${withdrawal.id}', '${withdrawal.nohp}')">
+              <i class="fas fa-check"></i> Setujui
+            </button>
+            <button class="btn btn-danger" onclick="rejectWithdrawal('${withdrawal.id}', '${withdrawal.nohp}', ${withdrawal.amount})">
+              <i class="fas fa-times"></i> Tolak
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayTransactions() {
+      const container = document.getElementById('transactionsCards');
+      const recentTransactions = [...allTransactions]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 20);
+      
+      if (recentTransactions.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-exchange-alt"></i></div>
+            <div class="empty-title">Tidak Ada Transaksi</div>
+            <div class="empty-description">Belum ada transaksi yang tercatat.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      recentTransactions.forEach(transaction => {
+        const isDeposit = transaction.type === 'deposit';
+        const card = document.createElement('div');
+        card.className = `card ${isDeposit ? 'deposit' : 'withdraw'}`;
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">
+              ${isDeposit ? 'Deposit' : 'Withdraw'}
+            </div>
+            ${getStatusBadge(transaction.status)}
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">User:</span>
+              <span class="info-value">${transaction.nohp}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Jumlah:</span>
+              <span class="info-value">${formatRupiah(transaction.amount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Tipe:</span>
+              <span class="info-value">
+                ${isDeposit ? 
+                  '<span style="color: #34C759;">Deposit</span>' : 
+                  '<span style="color: #00C7BE;">Withdraw</span>'}
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Waktu:</span>
+              <span class="info-value">${formatDateTime(transaction.date)}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayBanks() {
+      const container = document.getElementById('banksCards');
+      
+      if (allBanks.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-university"></i></div>
+            <div class="empty-title">Tidak Ada Rekening</div>
+            <div class="empty-description">Belum ada rekening bank yang terdaftar.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      allBanks.forEach(bank => {
+        const card = document.createElement('div');
+        card.className = 'card bank';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${bank.nohp}</div>
+            <span class="card-badge">${bank.bank_id}</span>
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">Bank/EWallet:</span>
+              <span class="info-value">${bank.bank_type}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Pemilik:</span>
+              <span class="info-value">${bank.account_holder}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Nomor:</span>
+              <span class="info-value">${bank.account_number}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary" onclick="editBank('${bank.nohp}', '${bank.bank_id}')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayProducts() {
+      const container = document.getElementById('productsCards');
+      
+      if (allProducts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-box"></i></div>
+            <div class="empty-title">Tidak Ada Produk</div>
+            <div class="empty-description">Belum ada produk yang tercatat.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      allProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${product.product_name}</div>
+            <span class="card-badge">${product.status.toUpperCase()}</span>
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">User:</span>
+              <span class="info-value">${product.nohp}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">ID Produk:</span>
+              <span class="info-value">${product.product_id}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Harga:</span>
+              <span class="info-value">${formatRupiah(product.amount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Tanggal:</span>
+              <span class="info-value">${formatDateTime(product.purchase_date)}</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-danger" onclick="deleteProduct('${product.nohp}', '${product.product_id}')">
+              <i class="fas fa-trash"></i> Hapus
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Search Function
+    function searchData() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const activeSection = document.querySelector('.content.active').id;
+      
+      let dataToSearch = [];
+      let displayFunction = null;
+      
+      switch(activeSection) {
+        case 'users-content':
+          dataToSearch = allUsers;
+          displayFunction = displayUsers;
+          break;
+        case 'deposits-content':
+          dataToSearch = allDeposits;
+          displayFunction = () => {
+            const filtered = allDeposits.filter(d => 
+              d.nohp.toLowerCase().includes(searchTerm) ||
+              (d.userName && d.userName.toLowerCase().includes(searchTerm))
+            );
+            displayFilteredDeposits(filtered);
+          };
+          break;
+        case 'withdrawals-content':
+          dataToSearch = allWithdrawals;
+          displayFunction = () => {
+            const filtered = allWithdrawals.filter(w => 
+              w.nohp.toLowerCase().includes(searchTerm)
+            );
+            displayFilteredWithdrawals(filtered);
+          };
+          break;
+        default:
+          return;
+      }
+      
+      displayFunction();
+    }
+
+    function displayFilteredDeposits(filteredDeposits) {
+      const container = document.getElementById('depositsCards');
+      
+      if (filteredDeposits.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-search"></i></div>
+            <div class="empty-title">Tidak Ditemukan</div>
+            <div class="empty-description">Tidak ada deposit yang sesuai dengan pencarian.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      filteredDeposits.forEach(deposit => {
+        const card = document.createElement('div');
+        card.className = 'card deposit';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${deposit.nohp}</div>
+            ${getStatusBadge(deposit.status)}
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">Jumlah:</span>
+              <span class="info-value">${formatRupiah(deposit.amount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Kode Unik:</span>
+              <span class="info-value">${deposit.uniqueCode || '0'}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Waktu:</span>
+              <span class="info-value">${formatDateTime(deposit.date)}</span>
+            </div>
+          </div>
+          ${deposit.status === 'pending' || deposit.status === 'waiting_verification' ? `
+          <div class="card-actions">
+            <button class="btn btn-success" onclick="approveDeposit('${deposit.id}', '${deposit.nohp}', ${deposit.amount})">
+              <i class="fas fa-check"></i> Setujui
+            </button>
+            <button class="btn btn-danger" onclick="rejectDeposit('${deposit.id}', '${deposit.nohp}')">
+              <i class="fas fa-times"></i> Tolak
+            </button>
+          </div>
+          ` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function displayFilteredWithdrawals(filteredWithdrawals) {
+      const container = document.getElementById('withdrawalsCards');
+      
+      if (filteredWithdrawals.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-search"></i></div>
+            <div class="empty-title">Tidak Ditemukan</div>
+            <div class="empty-description">Tidak ada penarikan yang sesuai dengan pencarian.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      
+      filteredWithdrawals.forEach(withdrawal => {
+        const card = document.createElement('div');
+        card.className = 'card withdraw';
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="card-title">${withdrawal.nohp}</div>
+            <span class="card-badge badge-pending">PENDING</span>
+          </div>
+          <div class="card-body">
+            <div class="info-row">
+              <span class="info-label">Jumlah:</span>
+              <span class="info-value">${formatRupiah(withdrawal.amount)}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Bank:</span>
+              <span class="info-value">${withdrawal.bankType}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Waktu:</span>
+              <span class="info-value">${formatDateTime(withdrawal.date)}</span>
+            </div>
+          </div>
+          ${withdrawal.status === 'pending' ? `
+          <div class="card-actions">
+            <button class="btn btn-success" onclick="approveWithdrawal('${withdrawal.id}', '${withdrawal.nohp}')">
+              <i class="fas fa-check"></i> Setujui
+            </button>
+            <button class="btn btn-danger" onclick="rejectWithdrawal('${withdrawal.id}', '${withdrawal.nohp}', ${withdrawal.amount})">
+              <i class="fas fa-times"></i> Tolak
+            </button>
+          </div>
+          ` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Section Navigation
+    window.showSection = function(section) {
+      // Hide all sections
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      
+      // Show selected section
+      document.getElementById(section + '-content').classList.add('active');
+      document.querySelector(`.nav-tab[onclick="showSection('${section}')"]`).classList.add('active');
+      
+      // Update search placeholder
+      const searchInput = document.getElementById('searchInput');
+      switch(section) {
+        case 'users':
+          searchInput.placeholder = 'Cari user berdasarkan nomor HP atau nama...';
+          break;
+        case 'deposits':
+          searchInput.placeholder = 'Cari deposit berdasarkan nomor HP...';
+          break;
+        case 'withdrawals':
+          searchInput.placeholder = 'Cari withdrawal berdasarkan nomor HP...';
+          break;
+        default:
+          searchInput.placeholder = 'Cari...';
+      }
+    };
+
+    // Transaction Approval Functions - DIPERBAIKI untuk deposit
+    window.approveDeposit = async function(depositId, nohp, amount) {
+      if (!confirm(`Setujui deposit ${depositId} untuk user ${nohp}?`)) return;
+      
+      try {
+        console.log('Menyetujui deposit:', depositId);
+        
+        // Update di all_deposits
+        await update(ref(db, `all_deposits/${depositId}`), {
+          status: 'success',
+          approvedAt: new Date().toISOString(),
+          approvedBy: 'admin'
+        });
+        
+        // Update di deposits/{nohp}/{depositId} jika ada
+        try {
+          await update(ref(db, `deposits/${nohp}/${depositId}`), {
+            status: 'success',
+            approvedAt: new Date().toISOString()
+          });
+        } catch (err) {
+          console.log('Deposit tidak ditemukan di path user:', err);
+        }
+        
+        // Tambahkan saldo ke user
+        if (amount > 0) {
+          const userRef = ref(db, `users/${nohp}/saldo`);
+          const userSnap = await get(userRef);
+          const currentBalance = userSnap.exists() ? parseInt(userSnap.val()) : 0;
+          await update(ref(db, `users/${nohp}`), {
+            saldo: currentBalance + amount
+          });
+        }
+        
+        alert('Deposit berhasil disetujui dan saldo ditambahkan!');
+        loadAdminData();
+      } catch (error) {
+        console.error('Error approving deposit:', error);
+        alert('Gagal menyetujui deposit: ' + error.message);
+      }
+    };
+
+    window.rejectDeposit = async function(depositId, nohp) {
+      if (!confirm(`Tolak deposit ${depositId} untuk user ${nohp}?`)) return;
+      
+      try {
+        // Update di all_deposits
+        await update(ref(db, `all_deposits/${depositId}`), {
+          status: 'rejected',
+          rejectedAt: new Date().toISOString(),
+          rejectedBy: 'admin'
+        });
+        
+        // Update di deposits/{nohp}/{depositId} jika ada
+        try {
+          await update(ref(db, `deposits/${nohp}/${depositId}`), {
+            status: 'rejected',
+            rejectedAt: new Date().toISOString()
+          });
+        } catch (err) {
+          console.log('Deposit tidak ditemukan di path user:', err);
+        }
+        
+        alert('Deposit berhasil ditolak!');
+        loadAdminData();
+      } catch (error) {
+        console.error('Error rejecting deposit:', error);
+        alert('Gagal menolak deposit: ' + error.message);
+      }
+    };
+
+    window.approveWithdrawal = async function(withdrawalId, nohp) {
+      if (!confirm(`Setujui withdrawal ${withdrawalId} untuk user ${nohp}?`)) return;
+      
+      try {
+        await update(ref(db, `withdrawals/${nohp}/${withdrawalId}`), {
+          status: 'success',
+          approvedAt: new Date().toISOString()
+        });
+        
+        alert('Withdrawal berhasil disetujui!');
+        loadAdminData();
+      } catch (error) {
+        console.error('Error approving withdrawal:', error);
+        alert('Gagal menyetujui withdrawal: ' + error.message);
+      }
+    };
+
+    window.rejectWithdrawal = async function(withdrawalId, nohp, amount) {
+      if (!confirm(`Tolak withdrawal ${withdrawalId} untuk user ${nohp}?`)) return;
+      
+      try {
+        await update(ref(db, `withdrawals/${nohp}/${withdrawalId}`), {
+          status: 'rejected',
+          rejectedAt: new Date().toISOString()
+        });
+        
+        // Kembalikan saldo ke user
+        if (amount > 0) {
+          const userRef = ref(db, `users/${nohp}/saldo`);
+          const userSnap = await get(userRef);
+          const currentBalance = userSnap.exists() ? parseInt(userSnap.val()) : 0;
+          await update(ref(db, `users/${nohp}`), {
+            saldo: currentBalance + amount
+          });
+        }
+        
+        alert('Withdrawal berhasil ditolak dan saldo dikembalikan!');
+        loadAdminData();
+      } catch (error) {
+        console.error('Error rejecting withdrawal:', error);
+        alert('Gagal menolak withdrawal: ' + error.message);
+      }
+    };
+
+    // User Management
+    window.editUser = function(nohp) {
+      const user = allUsers.find(u => u.nohp === nohp);
+      if (!user) return;
+      
+      currentEditData = user;
+      currentEditType = 'user';
+      
+      document.getElementById('modalTitle').textContent = 'Edit User';
+      document.getElementById('modalBody').innerHTML = `
+        <div class="form-group">
+          <label class="form-label">No. HP</label>
+          <input type="text" class="form-input" id="editPhone" value="${user.nohp}" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama</label>
+          <input type="text" class="form-input" id="editName" value="${user.nama}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="text" class="form-input" id="editPassword" value="${user.password}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Saldo</label>
+          <input type="number" class="form-input" id="editSaldo" value="${user.saldo}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Upline</label>
+          <input type="text" class="form-input" id="editUpline" value="${user.upline}">
+        </div>
+      `;
+      
+      document.getElementById('editModal').style.display = 'flex';
+    };
+
+    window.banUser = async function(nohp) {
+      if (!confirm(`Ban user ${nohp}? User tidak bisa login lagi.`)) return;
+      
+      try {
+        await update(ref(db, `users/${nohp}`), {
+          isBanned: true,
+          bannedAt: new Date().toISOString()
+        });
+        
+        alert('User berhasil dibanned!');
+        loadAdminData();
+      } catch (error) {
+        alert('Gagal membanned user: ' + error.message);
+      }
+    };
+
+    window.unbanUser = async function(nohp) {
+      if (!confirm(`Unban user ${nohp}?`)) return;
+      
+      try {
+        await update(ref(db, `users/${nohp}`), {
+          isBanned: false,
+          bannedAt: null
+        });
+        
+        alert('User berhasil diunban!');
+        loadAdminData();
+      } catch (error) {
+        alert('Gagal mengunban user: ' + error.message);
+      }
+    };
+
+    // Bank Management
+    window.editBank = function(nohp, bankId) {
+      const bank = allBanks.find(b => b.nohp === nohp && b.bank_id === bankId);
+      if (!bank) return;
+      
+      currentEditData = bank;
+      currentEditType = 'bank';
+      
+      document.getElementById('modalTitle').textContent = 'Edit Rekening Bank';
+      document.getElementById('modalBody').innerHTML = `
+        <div class="form-group">
+          <label class="form-label">No. HP User</label>
+          <input type="text" class="form-input" id="editBankPhone" value="${bank.nohp}" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Jenis Bank/EWallet</label>
+          <input type="text" class="form-input" id="editBankType" value="${bank.bank_type}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama Pemilik</label>
+          <input type="text" class="form-input" id="editAccountHolder" value="${bank.account_holder}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nomor Rekening</label>
+          <input type="text" class="form-input" id="editAccountNumber" value="${bank.account_number}">
+        </div>
+      `;
+      
+      document.getElementById('editModal').style.display = 'flex';
+    };
+
+    // Product Management
+    window.deleteProduct = async function(nohp, productId) {
+      if (!confirm(`Hapus produk ${productId} dari user ${nohp}?`)) return;
+      
+      try {
+        await remove(ref(db, `products/${nohp}/${productId}`));
+        alert('Produk berhasil dihapus!');
+        loadAdminData();
+      } catch (error) {
+        alert('Gagal menghapus produk: ' + error.message);
+      }
+    };
+
+    // Save Edit Data
+    window.saveEditData = async function() {
+      if (!currentEditData || !currentEditType) return;
+      
+      try {
+        if (currentEditType === 'user') {
+          const updates = {
+            nama: document.getElementById('editName').value,
+            password: document.getElementById('editPassword').value,
+            saldo: parseInt(document.getElementById('editSaldo').value) || 0,
+            upline: document.getElementById('editUpline').value
+          };
+          
+          await update(ref(db, `users/${currentEditData.nohp}`), updates);
+        } else if (currentEditType === 'bank') {
+          const updates = {
+            bankType: document.getElementById('editBankType').value,
+            accountHolder: document.getElementById('editAccountHolder').value,
+            accountNumber: document.getElementById('editAccountNumber').value
+          };
+          
+          await set(ref(db, `banks/${currentEditData.nohp}/${currentEditData.bank_id}`), updates);
+        }
+        
+        closeEditModal();
+        alert('Data berhasil disimpan!');
+        loadAdminData();
+      } catch (error) {
+        alert('Gagal menyimpan data: ' + error.message);
+      }
+    };
+
+    window.closeEditModal = function() {
+      document.getElementById('editModal').style.display = 'none';
+      currentEditData = null;
+      currentEditType = null;
+    };
+
+    // Setup real-time listeners
+    function setupListeners() {
+      // Listen for changes in all_deposits
+      const allDepositsRef = ref(db, 'all_deposits');
+      onValue(allDepositsRef, () => {
+        console.log('Data all_deposits diperbarui');
+        loadAdminData();
+      });
+      
+      // Listen for other changes
+      const usersRef = ref(db, 'users');
+      const withdrawalsRef = ref(db, 'withdrawals');
+      const banksRef = ref(db, 'banks');
+      const productsRef = ref(db, 'products');
+      
+      onValue(usersRef, () => {
+        console.log('Data users diperbarui');
+        loadAdminData();
+      });
+      
+      onValue(withdrawalsRef, () => {
+        console.log('Data withdrawals diperbarui');
+        loadAdminData();
+      });
+      
+      onValue(banksRef, () => {
+        console.log('Data banks diperbarui');
+        loadAdminData();
+      });
+      
+      onValue(productsRef, () => {
+        console.log('Data products diperbarui');
+        loadAdminData();
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      checkLoginStatus();
+      if (getSession()) {
+        setupListeners();
+      }
+    });
+
+  </script>
+</body>
+</html>

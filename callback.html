@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Callback - Apple Invest</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 50px; 
+            background: #000;
+            color: white;
+        }
+        .container { 
+            background: #1C1C1E; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .success { color: #32D74B; }
+        .error { color: #FF2D55; }
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Memproses Pembayaran...</h1>
+        <p>Harap tunggu, kami sedang memverifikasi pembayaran Anda.</p>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // Tangani parameter dari Jaya Payment
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderNum = urlParams.get('orderNum');
+        const status = urlParams.get('status');
+        
+        if (orderNum && status === 'success') {
+            document.getElementById('status').innerHTML = 
+                '<p class="success">✅ Pembayaran berhasil!</p>' +
+                '<p>Order ID: ' + orderNum + '</p>' +
+                '<p>Saldo akan segera ditambahkan ke akun Anda.</p>' +
+                '<button onclick="goToDashboard()">Kembali ke Dashboard</button>';
+                
+            // Auto redirect setelah 3 detik
+            setTimeout(() => {
+                goToDashboard();
+            }, 3000);
+        } else {
+            document.getElementById('status').innerHTML = 
+                '<p class="error">❌ Terjadi kesalahan dalam pembayaran</p>' +
+                '<p>Silakan coba lagi atau hubungi customer service.</p>' +
+                '<button onclick="goToDeposit()">Coba Lagi</button>';
+        }
+
+        function goToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function goToDeposit() {
+            window.location.href = 'deposit.html';
+        }
+    </script>
+</body>
+</html>

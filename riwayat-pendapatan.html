@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BitVault • Riwayat Pendapatan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-primary: #05070C;
+      --bg-secondary: #0B0F17;
+      --card-bg: rgba(18, 24, 36, 0.75);
+      --gold: #F0B90B;
+      --gold-dark: #D4940A;
+      --gold-glow: rgba(240, 185, 11, 0.3);
+      --text-primary: #FFFFFF;
+      --text-secondary: #A0AABF;
+      --border-light: rgba(240, 185, 11, 0.2);
+      --shadow-premium: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+      --gradient-gold: linear-gradient(135deg, #F0B90B, #F8C34A);
+    }
+
+    body {
+      background: var(--bg-primary);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* CRYPTO BACKGROUND */
+    .crypto-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 30% 20%, #0A0E1A, #03050A);
+    }
+    .grid-pattern {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(240, 185, 11, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(240, 185, 11, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -1;
+    }
+    .floating-btc {
+      position: fixed;
+      bottom: 5%;
+      left: -50px;
+      font-size: 180px;
+      opacity: 0.02;
+      pointer-events: none;
+      transform: rotate(-15deg);
+      z-index: -1;
+    }
+
+    /* HEADER */
+    .header {
+      padding: 24px 24px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-light);
+      background: rgba(5, 7, 12, 0.6);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid var(--border-light);
+    }
+    .back-btn i {
+      font-size: 18px;
+      color: var(--gold);
+    }
+    .back-btn:hover {
+      background: rgba(240, 185, 11, 0.15);
+      transform: translateX(-3px);
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    /* MAIN */
+    main {
+      padding: 24px;
+      max-width: 600px;
+      margin: 0 auto;
+      padding-bottom: 40px;
+    }
+
+    /* STATS CARD */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      flex: 1;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border-light);
+      transition: 0.2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+    }
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(240, 185, 11, 0.1);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+    }
+    .stat-icon i {
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      background: rgba(18, 24, 36, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 60px;
+      padding: 4px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-light);
+    }
+    .tab {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-weight: 600;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+    }
+    .tab.active {
+      background: var(--gradient-gold);
+      color: #0A0B10;
+    }
+
+    /* HISTORY LIST */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .history-item {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 28px;
+      padding: 18px;
+      border: 1px solid var(--border-light);
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .history-item:hover {
+      transform: translateX(4px);
+      border-color: var(--gold);
+    }
+    .history-icon {
+      width: 52px;
+      height: 52px;
+      background: rgba(240, 185, 11, 0.1);
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .history-icon i {
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .history-info {
+      flex: 1;
+    }
+    .history-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .history-source {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .history-amount {
+      text-align: right;
+    }
+    .amount-value {
+      font-size: 18px;
+      font-weight: 800;
+      color: #10B981;
+      margin-bottom: 4px;
+    }
+    .history-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 40px;
+      border: 1px solid var(--border-light);
+    }
+    .empty-state i {
+      font-size: 64px;
+      color: var(--gold);
+      opacity: 0.4;
+      margin-bottom: 16px;
+    }
+    .empty-state h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .empty-state p {
+      color: var(--text-secondary);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-container {
+      background: #0F121C;
+      border-radius: 48px;
+      max-width: 340px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      border: 1px solid var(--gold);
+    }
+    .modal-container i {
+      font-size: 56px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .modal-container h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .modal-container p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+    .modal-btn {
+      background: var(--gradient-gold);
+      border: none;
+      border-radius: 60px;
+      padding: 14px;
+      width: 100%;
+      font-weight: 700;
+      cursor: pointer;
+      color: #0A0B10;
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 20px;
+      }
+      .stats-row {
+        flex-direction: column;
+      }
+      .history-item {
+        flex-direction: column;
+        text-align: center;
+      }
+      .history-amount {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="crypto-bg"></div>
+<div class="grid-pattern"></div>
+<div class="floating-btc"><i class="fab fa-bitcoin"></i></div>
+
+<div class="header">
+  <div class="back-btn" onclick="goPage('profil.html')">
+    <i class="fas fa-arrow-left"></i>
+  </div>
+  <h1>Riwayat Pendapatan</h1>
+</div>
+
+<main>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+      <div class="stat-label">Total Profit Produk</div>
+      <div class="stat-value" id="totalProfit">Rp 0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-gift"></i></div>
+      <div class="stat-label">Total Bonus Referral</div>
+      <div class="stat-value" id="totalReferralBonus">Rp 0</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="filterHistory('all')">Semua</button>
+    <button class="tab" onclick="filterHistory('profit')">Profit Produk</button>
+    <button class="tab" onclick="filterHistory('referral')">Bonus Referral</button>
+  </div>
+
+  <div class="history-list" id="historyList">
+    <div class="empty-state">
+      <i class="fas fa-clock"></i>
+      <h3>Memuat data...</h3>
+      <p>Silakan tunggu</p>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-container">
+    <i class="fas fa-circle-info"></i>
+    <h3 id="modalTitle">Info</h3>
+    <p id="modalMessage"></p>
+    <button class="modal-btn" onclick="closeModal()">Mengerti</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let allHistory = [];
+  let currentFilter = 'all';
+
+  function formatRupiah(n) {
+    return 'Rp ' + (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function formatDateTime(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function showModal(title, msg) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerHTML = msg;
+    modal.style.display = 'flex';
+  }
+  window.closeModal = () => document.getElementById('modal').style.display = 'none';
+  window.goPage = (page) => window.location.href = page;
+
+  async function loadIncomeHistory() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showModal('Akses Ditolak', 'Silakan login kembali');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+
+    try {
+      const [incomeSnap, commissionsSnap, purchasesSnap] = await Promise.all([
+        get(ref(db, 'income_history/' + nohp)),
+        get(ref(db, 'commissions/' + nohp)),
+        get(ref(db, 'purchases/' + nohp))
+      ]);
+
+      allHistory = [];
+      let totalProfit = 0;
+      let totalReferralBonus = 0;
+
+      // Income history dari database
+      if (incomeSnap.exists()) {
+        const incomes = incomeSnap.val();
+        for (const [id, data] of Object.entries(incomes)) {
+          const amount = data.amount || 0;
+          const type = data.type || 'profit';
+          if (type === 'profit') totalProfit += amount;
+          else if (type === 'referral') totalReferralBonus += amount;
+          allHistory.push({
+            id,
+            type,
+            title: data.title || (type === 'profit' ? 'Profit Produk' : 'Bonus Referral'),
+            source: data.source || (type === 'profit' ? 'Bitcoin Mining' : 'Komisi Referral'),
+            amount,
+            description: data.description || '',
+            date: data.date || new Date().toISOString()
+          });
+        }
+      }
+
+      // Komisi referral (backup)
+      if (commissionsSnap.exists()) {
+        const commissions = commissionsSnap.val();
+        for (const [id, data] of Object.entries(commissions)) {
+          const amount = data.jumlah || 0;
+          totalReferralBonus += amount;
+          const levelText = data.level === 1 ? 'Level 1' : data.level === 2 ? 'Level 2' : 'Level 3';
+          allHistory.push({
+            id: `comm_${id}`,
+            type: 'referral',
+            title: 'Bonus Referral',
+            source: `Komisi ${levelText}`,
+            amount,
+            description: `Komisi ${levelText} dari ${data.dari || 'member'}`,
+            date: data.tanggal || new Date().toISOString()
+          });
+        }
+      }
+
+      // Profit dari produk (purchases)
+      if (purchasesSnap.exists()) {
+        const purchases = purchasesSnap.val();
+        for (const [kode, data] of Object.entries(purchases)) {
+          if (data.total_profit_diambil && data.total_profit_diambil > 0) {
+            totalProfit += data.total_profit_diambil;
+            allHistory.push({
+              id: `profit_${kode}_${Date.now()}`,
+              type: 'profit',
+              title: 'Profit Produk',
+              source: `Paket ${kode.toUpperCase()}`,
+              amount: data.total_profit_diambil,
+              description: `Profit dari paket ${kode.toUpperCase()}`,
+              date: data.last_profit_date || data.tanggal || new Date().toISOString()
+            });
+          }
+        }
+      }
+
+      // Remove duplicates based on approximate match
+      const unique = [];
+      const seen = new Set();
+      for (const item of allHistory) {
+        const key = `${item.type}_${item.amount}_${item.date.substring(0, 16)}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+      allHistory = unique;
+      allHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      document.getElementById('totalProfit').innerText = formatRupiah(totalProfit);
+      document.getElementById('totalReferralBonus').innerText = formatRupiah(totalReferralBonus);
+
+      displayHistory(currentFilter);
+
+    } catch (error) {
+      console.error(error);
+      showModal('Error', 'Gagal memuat riwayat pendapatan');
+      document.getElementById('historyList').innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Gagal Memuat</h3>
+          <p>Silakan coba lagi nanti</p>
+        </div>
+      `;
+    }
+  }
+
+  function displayHistory(filter) {
+    const container = document.getElementById('historyList');
+    let filtered = allHistory;
+    if (filter === 'profit') filtered = allHistory.filter(h => h.type === 'profit');
+    else if (filter === 'referral') filtered = allHistory.filter(h => h.type === 'referral');
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-receipt"></i>
+          <h3>Belum Ada Data</h3>
+          <p>Anda belum memiliki riwayat pendapatan</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = '';
+    filtered.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `
+        <div class="history-icon">
+          <i class="fas ${item.type === 'profit' ? 'fa-chart-line' : 'fa-gift'}"></i>
+        </div>
+        <div class="history-info">
+          <div class="history-title">${item.title}</div>
+          <div class="history-source">${item.source}</div>
+        </div>
+        <div class="history-amount">
+          <div class="amount-value">+${formatRupiah(item.amount)}</div>
+          <div class="history-date">${formatDateTime(item.date)}</div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  window.filterHistory = (filter) => {
+    currentFilter = filter;
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    displayHistory(filter);
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('nohp')) {
+      showModal('Perlu Login', 'Anda harus login terlebih dahulu');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    loadIncomeHistory();
+  });
+</script>
+</body>
+</html>

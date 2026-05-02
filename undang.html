@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BitClub • Ajak Teman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-deep: #0B0E17;
+      --bg-card: #11151F;
+      --gold: #F5B041;
+      --gold-glow: #F39C12;
+      --text-main: #FFFFFF;
+      --text-dim: #9AA4BF;
+      --border-gold: rgba(245, 176, 65, 0.3);
+      --grad-gold: linear-gradient(135deg, #F5B041, #F39C12);
+      --shadow-gold: 0 10px 25px -5px rgba(245, 176, 65, 0.2);
+      --shadow-card: 0 20px 35px -12px rgba(0,0,0,0.5);
+    }
+
+    body {
+      background: var(--bg-deep);
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--text-main);
+      overflow-x: hidden;
+      padding-bottom: 85px;
+      position: relative;
+    }
+
+    /* === BACKGROUND CRYPTO === */
+    .bg-particles {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 20% 30%, #0F1622, #05070D);
+    }
+    .hex-grid {
+      position: fixed;
+      inset: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path fill="none" stroke="%23F5B041" stroke-width="0.6" d="M50 5 L93.3 27.5 L93.3 72.5 L50 95 L6.7 72.5 L6.7 27.5 Z M50 5 L50 27.5 L93.3 50 M50 27.5 L6.7 50 M50 27.5 L50 50 M6.7 50 L6.7 72.5 M93.3 50 L93.3 72.5 M50 50 L50 72.5 L93.3 95 M50 72.5 L6.7 95"/></svg>');
+      background-size: 70px;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .glow-ball {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(245,176,65,0.15), transparent 70%);
+      border-radius: 50%;
+      top: -200px;
+      right: -150px;
+      filter: blur(70px);
+      z-index: -1;
+    }
+
+    /* === HEADER === */
+    .header {
+      padding: 24px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-gold);
+    }
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid rgba(245,176,65,0.3);
+    }
+    .back-btn i {
+      font-size: 20px;
+      color: var(--gold);
+    }
+    .back-btn:hover {
+      background: rgba(245,176,65,0.2);
+      transform: translateX(-3px);
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      background: var(--grad-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* === MAIN === */
+    main {
+      padding: 24px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* REFERRAL CARD */
+    .ref-card {
+      background: var(--bg-card);
+      border-radius: 48px;
+      padding: 28px 24px;
+      border: 1px solid var(--border-gold);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 28px;
+      backdrop-filter: blur(4px);
+      text-align: center;
+    }
+    .ref-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(245,176,65,0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      border: 1px dashed var(--gold);
+    }
+    .ref-icon i {
+      font-size: 38px;
+      color: var(--gold);
+    }
+    .ref-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .ref-sub {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+    .code-box {
+      background: rgba(0,0,0,0.5);
+      border-radius: 60px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-gold);
+    }
+    .code {
+      font-family: monospace;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gold);
+      word-break: break-all;
+      flex: 1;
+      text-align: center;
+    }
+    .copy-code {
+      background: var(--grad-gold);
+      border: none;
+      border-radius: 40px;
+      padding: 10px 20px;
+      font-weight: 600;
+      color: #0A0B10;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+    .copy-code:hover {
+      transform: scale(1.02);
+    }
+    .url-box {
+      background: rgba(0,0,0,0.4);
+      border-radius: 20px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .url-text {
+      font-size: 12px;
+      color: var(--text-dim);
+      word-break: break-all;
+      flex: 1;
+      text-align: left;
+    }
+    .copy-url {
+      background: rgba(245,176,65,0.2);
+      border: 1px solid var(--border-gold);
+      border-radius: 30px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gold);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .share-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    .share-btn {
+      flex: 1;
+      background: rgba(245,176,65,0.1);
+      border: 1px solid var(--border-gold);
+      border-radius: 60px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--gold);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .share-btn i {
+      font-size: 20px;
+    }
+    .share-btn:hover {
+      background: rgba(245,176,65,0.25);
+      transform: translateY(-2px);
+    }
+
+    /* STATS */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .stat-box {
+      flex: 1;
+      background: var(--bg-card);
+      border-radius: 32px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border-gold);
+    }
+    .stat-box .label {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .stat-box .value {
+      font-size: 28px;
+      font-weight: 800;
+      background: var(--grad-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* COMMISSION */
+    .section {
+      margin-bottom: 28px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-header i {
+      font-size: 24px;
+      color: var(--gold);
+    }
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .commission-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .level-item {
+      background: var(--bg-card);
+      border-radius: 28px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-left: 4px solid var(--gold);
+    }
+    .level-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .level-badge {
+      width: 52px;
+      height: 52px;
+      background: var(--grad-gold);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #0A0B10;
+    }
+    .level-info h3 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .level-info p {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .level-percent {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    /* TIPS */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .tip-card {
+      background: rgba(17,21,31,0.8);
+      border-radius: 24px;
+      padding: 16px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(245,176,65,0.15);
+      transition: 0.2s;
+    }
+    .tip-card i {
+      font-size: 28px;
+      color: var(--gold);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .tip-card h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .tip-card p {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8, 11, 18, 0.95);
+      backdrop-filter: blur(20px);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 12px 22px;
+      border-top: 1px solid var(--border-gold);
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-dim);
+      transition: 0.2s;
+      gap: 4px;
+    }
+    .nav-item i {
+      font-size: 22px;
+    }
+    .nav-item span {
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .nav-item.active {
+      color: var(--gold);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-container {
+      background: var(--bg-card);
+      border-radius: 48px;
+      max-width: 340px;
+      width: 100%;
+      padding: 32px 24px;
+      text-align: center;
+      border: 1px solid var(--gold);
+    }
+    .modal-container i {
+      font-size: 56px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .modal-container h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    .modal-container p {
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+    .modal-btn {
+      background: var(--grad-gold);
+      border: none;
+      border-radius: 60px;
+      padding: 14px;
+      width: 100%;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .stats-row {
+        flex-direction: column;
+      }
+      .level-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .level-percent {
+        align-self: flex-end;
+      }
+      .tips-grid {
+        grid-template-columns: 1fr;
+      }
+      .code {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-particles"></div>
+<div class="hex-grid"></div>
+<div class="glow-ball"></div>
+
+<div class="header">
+  <div class="back-btn" onclick="goPage('dashboard.html')">
+    <i class="fas fa-arrow-left"></i>
+  </div>
+  <h1>Invite & Earn</h1>
+</div>
+
+<main>
+  <div class="ref-card">
+    <div class="ref-icon">
+      <i class="fas fa-user-plus"></i>
+    </div>
+    <div class="ref-title">Kode Undangan Unik</div>
+    <div class="ref-sub">Bagikan ke teman, dapatkan komisi</div>
+    <div class="code-box">
+      <div class="code" id="referralCode">Memuat...</div>
+      <button class="copy-code" onclick="copyReferralCode()"><i class="fas fa-copy"></i> Salin</button>
+    </div>
+    <div class="url-box">
+      <div class="url-text" id="referralUrl">Loading...</div>
+      <button class="copy-url" onclick="copyReferralUrl()">Salin URL</button>
+    </div>
+    <div class="share-row">
+      <button class="share-btn" onclick="shareWA()"><i class="fab fa-whatsapp"></i> WA</button>
+      <button class="share-btn" onclick="shareTG()"><i class="fab fa-telegram"></i> Telegram</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="label">Total Komisi</div>
+      <div class="value" id="totalKomisi">Rp 0</div>
+    </div>
+    <div class="stat-box">
+      <div class="label">Mitra Aktif</div>
+      <div class="value" id="totalReferral">0</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <i class="fas fa-chart-simple"></i>
+      <h2>Struktur Bonus</h2>
+    </div>
+    <div class="commission-grid">
+      <div class="level-item">
+        <div class="level-left">
+          <div class="level-badge">1</div>
+          <div class="level-info">
+            <h3>Level 1 · Langsung</h3>
+            <p>Setiap teman yang kamu undang</p>
+          </div>
+        </div>
+        <div class="level-percent">25%</div>
+      </div>
+      <div class="level-item">
+        <div class="level-left">
+          <div class="level-badge">2</div>
+          <div class="level-info">
+            <h3>Level 2 · Tidak Langsung</h3>
+            <p>Undangan dari level 1 kamu</p>
+          </div>
+        </div>
+        <div class="level-percent">2%</div>
+      </div>
+      <div class="level-item">
+        <div class="level-left">
+          <div class="level-badge">3</div>
+          <div class="level-info">
+            <h3>Level 3 · Tidak Langsung</h3>
+            <p>Undangan dari level 2 kamu</p>
+          </div>
+        </div>
+        <div class="level-percent">1%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <i class="fas fa-lightbulb"></i>
+      <h2>Tips Sukses</h2>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <i class="fas fa-share-alt"></i>
+        <h4>Share ke Grup</h4>
+        <p>Bagikan link ke grup WhatsApp/Telegram</p>
+      </div>
+      <div class="tip-card">
+        <i class="fas fa-chart-line"></i>
+        <h4>Jelaskan Keuntungan</h4>
+        <p>Ceritakan profit harian hingga 26%</p>
+      </div>
+      <div class="tip-card">
+        <i class="fas fa-users"></i>
+        <h4>Bangun Tim</h4>
+        <p>Dapatkan komisi hingga 3 level</p>
+      </div>
+      <div class="tip-card">
+        <i class="fas fa-trophy"></i>
+        <h4>Tanpa Batas</h4>
+        <p>Semakin banyak, semakin besar bonus</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<nav class="bottom-nav">
+  <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+  <a href="investasi.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Investasi</span></a>
+  <a href="undang.html" class="nav-item active"><i class="fas fa-share-alt"></i><span>Undang</span></a>
+  <a href="profil.html" class="nav-item"><i class="fas fa-user"></i><span>Profil</span></a>
+</nav>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-container">
+    <i class="fas fa-check-circle"></i>
+    <h3 id="modalTitle">Berhasil</h3>
+    <p id="modalMessage">Teks berhasil disalin</p>
+    <button class="modal-btn" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  function formatRupiah(n) {
+    return 'Rp ' + (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function showModal(title, msg) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerHTML = msg;
+    modal.style.display = 'flex';
+  }
+  window.closeModal = () => document.getElementById('modal').style.display = 'none';
+
+  async function loadData() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showModal('Akses Ditolak', 'Silakan login kembali');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    try {
+      const userSnap = await get(ref(db, 'users/' + nohp));
+      if (!userSnap.exists()) throw new Error();
+      const user = userSnap.val();
+      const refCode = user.referral_code || 'BTC' + Math.random().toString(36).substr(2, 6).toUpperCase();
+      document.getElementById('referralCode').innerText = refCode;
+      const url = window.location.origin + '/register.html?ref=' + refCode;
+      document.getElementById('referralUrl').innerText = url;
+
+      let totalKomisi = 0;
+      const commSnap = await get(ref(db, 'commissions/' + nohp));
+      if (commSnap.exists()) {
+        Object.values(commSnap.val()).forEach(c => totalKomisi += c.jumlah || 0);
+      }
+      document.getElementById('totalKomisi').innerText = formatRupiah(totalKomisi);
+
+      let aktif = 0;
+      const allUsers = await get(ref(db, 'users'));
+      if (allUsers.exists()) {
+        for (const [phone, data] of Object.entries(allUsers.val())) {
+          if (data.upline === nohp) {
+            const buy = await get(ref(db, 'purchases/' + phone));
+            if (buy.exists() && Object.keys(buy.val()).length) aktif++;
+          }
+        }
+      }
+      document.getElementById('totalReferral').innerText = aktif;
+    } catch(e) {
+      console.error(e);
+      showModal('Error', 'Gagal memuat data');
+    }
+  }
+
+  window.copyReferralCode = async () => {
+    const code = document.getElementById('referralCode').innerText;
+    if (code && code !== 'Memuat...') {
+      await navigator.clipboard.writeText(code);
+      showModal('Berhasil', 'Kode referral disalin');
+    }
+  };
+  window.copyReferralUrl = async () => {
+    const url = document.getElementById('referralUrl').innerText;
+    if (url && url !== 'Loading...') {
+      await navigator.clipboard.writeText(url);
+      showModal('Berhasil', 'URL referral disalin');
+    }
+  };
+  window.shareWA = () => {
+    const url = document.getElementById('referralUrl').innerText;
+    if (url && url !== 'Loading...') {
+      window.open(`https://wa.me/?text=Join%20Crypto%20Wealth%20-%20Profit%20harian%20hingga%2026%25!%20Daftar%20sekarang%3A%20${encodeURIComponent(url)}`, '_blank');
+    }
+  };
+  window.shareTG = () => {
+    const url = document.getElementById('referralUrl').innerText;
+    if (url && url !== 'Loading...') {
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=Join%20Crypto%20Wealth%20-%20Profit%20harian%20hingga%2026%25!`, '_blank');
+    }
+  };
+  window.goPage = (page) => window.location.href = page;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('nohp')) {
+      showModal('Perlu Login', 'Anda harus login terlebih dahulu');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    loadData();
+  });
+</script>
+</body>
+</html>

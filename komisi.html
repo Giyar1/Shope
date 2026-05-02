@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>BitVault • Komisi Referral</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #0A0D14;
+      --card: #11161F;
+      --border: rgba(240, 185, 11, 0.2);
+      --gold: #F0B90B;
+      --text: #FFFFFF;
+      --text-dim: #8E9AAB;
+      --shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Background subtle */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(240,185,11,0.05), transparent 70%);
+      z-index: -2;
+    }
+    .grid-dots {
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(240,185,11,0.1) 1px, transparent 1px);
+      background-size: 30px 30px;
+      z-index: -1;
+    }
+
+    /* Header */
+    .header {
+      padding: 20px 20px 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,13,20,0.8);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .back-btn {
+      width: 38px;
+      height: 38px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+      border: 1px solid var(--border);
+    }
+    .back-btn i {
+      font-size: 16px;
+      color: var(--gold);
+    }
+    .back-btn:hover {
+      background: rgba(240,185,11,0.15);
+    }
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: var(--gold);
+    }
+
+    /* Main */
+    main {
+      padding: 20px;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* Total komisi card */
+    .total-card {
+      background: var(--card);
+      border-radius: 28px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .total-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .total-amount {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: -0.3px;
+    }
+    .total-icon {
+      width: 46px;
+      height: 46px;
+      background: rgba(240,185,11,0.1);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+    }
+    .total-icon i {
+      font-size: 22px;
+      color: var(--gold);
+    }
+
+    /* Level badges row */
+    .levels {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .level-badge {
+      flex: 1;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 12px 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+    .level-badge.active {
+      border-color: var(--gold);
+      background: rgba(240,185,11,0.08);
+    }
+    .level-num {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .level-percent {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .level-badge.active .level-percent {
+      color: var(--gold);
+    }
+
+    /* Tabs (Level selector) */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      background: var(--card);
+      border-radius: 40px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+    .tab {
+      flex: 1;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      border-radius: 30px;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tab.active {
+      background: var(--gold);
+      color: #0A0B10;
+    }
+
+    /* Commission list */
+    .commission-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .commission-item {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+    .commission-item:hover {
+      border-color: var(--gold);
+    }
+    .comm-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(240,185,11,0.08);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .comm-icon i {
+      font-size: 18px;
+      color: var(--gold);
+    }
+    .comm-info {
+      flex: 1;
+    }
+    .comm-from {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .comm-package {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .comm-amount {
+      text-align: right;
+    }
+    .amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: #10B981;
+    }
+    .comm-date {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      background: var(--card);
+      border-radius: 28px;
+      border: 1px solid var(--border);
+    }
+    .empty-state i {
+      font-size: 48px;
+      color: var(--gold);
+      opacity: 0.4;
+      margin-bottom: 12px;
+    }
+    .empty-state h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .empty-state p {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .modal-container {
+      background: var(--card);
+      border-radius: 32px;
+      max-width: 300px;
+      width: 100%;
+      padding: 28px 20px;
+      text-align: center;
+      border: 1px solid var(--gold);
+    }
+    .modal-container i {
+      font-size: 48px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .modal-container h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .modal-container p {
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+    .modal-btn {
+      background: var(--gold);
+      border: none;
+      border-radius: 40px;
+      padding: 12px;
+      width: 100%;
+      font-weight: 600;
+      cursor: pointer;
+      color: #0A0B10;
+    }
+  </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+<div class="grid-dots"></div>
+
+<div class="header">
+  <div class="back-btn" onclick="goPage('profil.html')">
+    <i class="fas fa-arrow-left"></i>
+  </div>
+  <h1>Komisi Referral</h1>
+</div>
+
+<main>
+  <div class="total-card">
+    <div>
+      <div class="total-label">Total Komisi</div>
+      <div class="total-amount" id="totalKomisi">Rp 0</div>
+    </div>
+    <div class="total-icon"><i class="fas fa-gift"></i></div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active" data-level="1">Level 1 (25%)</div>
+    <div class="tab" data-level="2">Level 2 (2%)</div>
+    <div class="tab" data-level="3">Level 3 (1%)</div>
+  </div>
+
+  <div class="commission-list" id="commissionList">
+    <div class="empty-state">
+      <i class="fas fa-clock"></i>
+      <h3>Memuat data...</h3>
+      <p>Silakan tunggu</p>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-container">
+    <i class="fas fa-info-circle"></i>
+    <h3 id="modalTitle">Info</h3>
+    <p id="modalMessage"></p>
+    <button class="modal-btn" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+    authDomain: "lginvest-776cf.firebaseapp.com",
+    databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+    projectId: "lginvest-776cf",
+    storageBucket: "lginvest-776cf.firebasestorage.app",
+    messagingSenderId: "831934282072",
+    appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let commissionsData = { 1: [], 2: [], 3: [] };
+  let currentLevel = 1;
+
+  function formatRupiah(n) {
+    return 'Rp ' + (n || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  function maskPhone(phone) {
+    if (!phone || phone.length < 6) return phone;
+    return phone.slice(0,3) + '***' + phone.slice(-3);
+  }
+
+  function showModal(title, msg) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerHTML = msg;
+    modal.style.display = 'flex';
+  }
+  window.closeModal = () => document.getElementById('modal').style.display = 'none';
+  window.goPage = (page) => window.location.href = page;
+
+  async function loadCommissions() {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showModal('Akses Ditolak', 'Silakan login kembali');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+
+    try {
+      const snap = await get(ref(db, 'commissions/' + nohp));
+      let total = 0;
+      commissionsData = { 1: [], 2: [], 3: [] };
+
+      if (snap.exists()) {
+        const data = snap.val();
+        for (const id of Object.keys(data)) {
+          const item = data[id];
+          const level = item.level || 1;
+          if (level >= 1 && level <= 3) {
+            total += item.jumlah || 0;
+            commissionsData[level].push({
+              id,
+              from: item.dari || 'Member',
+              package: item.nama_paket || item.paket || 'Paket Bitcoin',
+              amount: item.jumlah || 0,
+              date: item.tanggal || new Date().toISOString()
+            });
+          }
+        }
+      }
+
+      for (let lvl = 1; lvl <= 3; lvl++) {
+        commissionsData[lvl].sort((a,b) => new Date(b.date) - new Date(a.date));
+      }
+
+      document.getElementById('totalKomisi').innerText = formatRupiah(total);
+      renderList(currentLevel);
+
+    } catch (err) {
+      console.error(err);
+      showModal('Error', 'Gagal memuat data komisi');
+      document.getElementById('commissionList').innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Error</h3><p>Silakan coba lagi</p></div>`;
+    }
+  }
+
+  function renderList(level) {
+    const container = document.getElementById('commissionList');
+    const items = commissionsData[level];
+    if (!items || items.length === 0) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>Belum Ada Komisi</h3><p>Level ${level} belum ada komisi</p></div>`;
+      return;
+    }
+    container.innerHTML = '';
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'commission-item';
+      div.innerHTML = `
+        <div class="comm-icon"><i class="fas fa-user-friends"></i></div>
+        <div class="comm-info">
+          <div class="comm-from">${maskPhone(item.from)}</div>
+          <div class="comm-package">${item.package}</div>
+        </div>
+        <div class="comm-amount">
+          <div class="amount">+${formatRupiah(item.amount)}</div>
+          <div class="comm-date">${formatDate(item.date)}</div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function setActiveTab(level) {
+    document.querySelectorAll('.tab').forEach(tab => {
+      const lvl = parseInt(tab.dataset.level);
+      if (lvl === level) tab.classList.add('active');
+      else tab.classList.remove('active');
+    });
+  }
+
+  window.switchLevel = (level) => {
+    currentLevel = level;
+    setActiveTab(level);
+    renderList(level);
+  };
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const level = parseInt(tab.dataset.level);
+      switchLevel(level);
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('nohp')) {
+      showModal('Perlu Login', 'Anda harus login terlebih dahulu');
+      setTimeout(() => window.location.href = 'index.html', 1500);
+      return;
+    }
+    loadCommissions();
+  });
+</script>
+</body>
+</html>
